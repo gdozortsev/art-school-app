@@ -243,7 +243,7 @@ export default function USMap() {
 
       {/* Map Area */}
       <div style={{ flex: 1, textAlign: "center", position: "relative", paddingTop: "20px" }}>
-        <svg ref={svgRef} width={900} height={600} />
+        <svg ref={svgRef} width="1350" height={600} />
         
         {/* Tooltip with tail */}
         {hoveredProgram && (<SchoolPopup hoveredProgram={hoveredProgram}/>)}
