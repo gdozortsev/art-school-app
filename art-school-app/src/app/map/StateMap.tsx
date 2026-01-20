@@ -53,7 +53,7 @@ export default function StateMap() {
         .data(states)
         .enter()
         .append("path")
-        .attr("d", path)
+        .attr("d", (d: StateFeature) => path(d) || "")
         .attr("fill", (d: StateFeature) => String(d.id) === String(stateId) ? "#8176b2ff" : "#AABCF0")
         .attr("stroke", "#8176b2ff")
         .attr("stroke-width", (d: StateFeature) => String(d.id) === String(stateId) ? 2 : 1)
@@ -75,13 +75,23 @@ export default function StateMap() {
   }, [stateId]);
 
   return (
-    <div style={{ textAlign: "center", marginTop: 40 }}>
-      <h2>{stateFeature ? getStateName(stateId) : "Loading..."}</h2>
-      <br />
-      <svg ref={svgRef} width={900} height={600} style={{ marginTop: 0 }} />
+    <div style={{ 
+      height: "calc(100vh - 64px)",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2rem",
+      boxSizing: "border-box",
+      overflow: "auto"
+    }}>
+      <h2 style={{ margin: 0, marginBottom: "1rem" }}>
+        {stateFeature ? getStateName(stateId) : "Loading..."}
+      </h2>
+      <svg ref={svgRef} width={900} height={600} style={{ display: "block" }} />
       <div style={{ marginTop: "2rem" }}>
         <Link to="/" style={{
-          color: "#4a90e2",
+          color: "#77bbc7ff",
           textDecoration: "none",
           fontSize: "1rem"
         }}>

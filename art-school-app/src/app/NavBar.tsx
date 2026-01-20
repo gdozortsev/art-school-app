@@ -1,14 +1,12 @@
-import React from "react";
 
 export default function NavBar({ currentPath = "/" }) {
   return (
     <nav style={{
-      backgroundColor: "#18295E",
+      backgroundColor: "  #ffffffff",
       padding: "1rem 2rem",
       boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
     }}>
       <div style={{
-        maxWidth: "1200px",
         margin: "0 auto",
         display: "flex",
         alignItems: "center",
@@ -17,7 +15,7 @@ export default function NavBar({ currentPath = "/" }) {
         <a 
           href="/" 
           style={{
-            color: "white",
+            color: "#2a2a2aff",
             textDecoration: "none",
             fontSize: "1.5rem",
             fontWeight: "bold"
@@ -30,7 +28,7 @@ export default function NavBar({ currentPath = "/" }) {
           <a
             href="./contacts"
             style={{
-              color: currentPath === "/" ? "#3498db" : "white",
+              color: currentPath === "/" ? "#2a2a2aff" : "white",
               textDecoration: "none",
               fontSize: "1rem",
               fontWeight: currentPath === "/" ? "600" : "400",

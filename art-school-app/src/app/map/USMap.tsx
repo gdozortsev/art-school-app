@@ -84,8 +84,9 @@ export default function USMap() {
         .enter()
         .append("path")
         .attr("d", (d: StateFeature) => path(d) || "")
-        .attr("fill", "#AABCF0")
-        .attr("stroke", "#8176b2ff")
+        //MAP COLORS
+        .attr("fill", "#c0acd4ff")
+        .attr("stroke", "#482c68ff")
         .attr("class", "state-path")
         .style("cursor", "pointer")
         .on("click", function(event: MouseEvent, d: StateFeature) {
@@ -133,15 +134,15 @@ export default function USMap() {
         .attr("class", "marker")
         .attr("transform", (d: any) => {
           const coords = projection([d.longitude, d.latitude]);
+          d.x = coords ? coords[0] : -100
+          d.y = coords ? coords[1] : -100
+          console.log("here are all the projected coords", coords, " and here are the ogs", d.longitude, d.latitude)
           return coords ? `translate(${coords[0]},${coords[1]})` : `translate(-100,-100)`;
         })
         .style("cursor", "pointer")
         .on("mouseenter", function(event: MouseEvent, d: any) {
           d3.select(this).select(".pin-body").attr("transform", "scale(1.2)");
-          const coords = projection([d.longitude, d.latitude]);
-          if (coords) {
-            setHoveredProgram({ ...d, x: coords[0], y: coords[1] });
-          }
+          setHoveredProgram(d)
         })
         .on("mouseleave", function() {
           d3.select(this).select(".pin-body").attr("transform", "scale(1)");
@@ -158,8 +159,8 @@ export default function USMap() {
         // Pin body (teardrop shape)
         pinGroup.append("path")
           .attr("d", "M 0,-30 C -8,-30 -15,-23 -15,-15 C -15,-8 0,0 0,0 C 0,0 15,-8 15,-15 C 15,-23 8,-30 0,-30 Z")
-          .attr("fill", "#EA4335")
-          .attr("stroke", "#fff")
+          .attr("fill", "#cd2525ff")
+          .attr("stroke", "#ffffffff")
           .attr("stroke-width", 2);
         
         // Inner circle
@@ -167,18 +168,22 @@ export default function USMap() {
           .attr("cx", 0)
           .attr("cy", -15)
           .attr("r", 6)
-          .attr("fill", "#fff");
+          .attr("fill", "#ffffffff");
       });
 
     });
   }, [navigate, filteredPrograms]);
 
   return (
-    <div style={{ display: "flex", height: "calc(100vh - 80px)" }}>
+    <div style={{ 
+      display: "flex", 
+      height: "100vh",
+      overflow: "hidden"
+    }}>
       {/* Filter Sidebar */}
       <div style={{
         width: "300px",
-        backgroundColor: "#f8f9fa",
+        backgroundColor: "#77bbc7ff",
         padding: "1.5rem",
         overflowY: "auto",
         borderRight: "1px solid #dee2e6"
@@ -193,7 +198,7 @@ export default function USMap() {
             value={filters.searchText}
             onChange={(e) => setFilters(prev => ({ ...prev, searchText: e.target.value }))}
             style={{
-              width: "100%",
+              width: "95%",
               padding: "0.5rem",
               border: "1px solid #ced4da",
               borderRadius: "4px",
@@ -242,8 +247,8 @@ export default function USMap() {
       </div>
 
       {/* Map Area */}
-      <div style={{ flex: 1, textAlign: "center", position: "relative", paddingTop: "20px" }}>
-        <svg ref={svgRef} width="1350" height={600} />
+      <div style={{ flex: 1, textAlign: "center", paddingTop: "20px", position: "relative" }}>
+        <svg ref={svgRef} width={900} height={600} />
         
         {/* Tooltip with tail */}
         {hoveredProgram && (<SchoolPopup hoveredProgram={hoveredProgram}/>)}

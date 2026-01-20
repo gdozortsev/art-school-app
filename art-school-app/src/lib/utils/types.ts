@@ -156,25 +156,113 @@ export const sample_programs = [
 
 // Filter categories
 export const filterOptions = {
-  type: ["University", "College", "Art School", "Community College"],
+  type: ["Art School", "Art School at University / College", "University / College"],
   programs: [
-    "Fine Arts",
-    "Graphic Design",
-    "Industrial Design",
-    "Illustration",
-    "Animation",
+    "Architecture and Design",
+    "Dance",
+    "Fashion",
     "Film",
+    "Game and Media Arts",
+    "Music",
     "Theater",
-    "Fashion Design",
-    "Architecture",
-    "Photography",
-    "Interior Design",
-    "Game Design",
-    "Digital Media",
-    "Sculpture",
-    "Painting",
-    "Ceramics"
+    "Visual Arts"
   ],
-  tuition: ["Low", "Medium", "High"],
-  enrollment: ["Small (<1000)", "Medium (1000-5000)", "Large (>5000)"]
+  //School size, make into sliding bar
+  enrollment: ["Small (<1000)", "Medium (1000-5000)", "Large (>5000)"],
+  visualArtOptions: [
+    "Arts Industry",
+    "Art History",
+    "Museum Studies",
+    "Conservation",
+    "Art Education", 
+    "Art Therapy",
+    "Design",
+    "Graphic Design",
+    "UI / UX / Digital Design and Media",
+    "Animation",
+    "Photography",
+    "Painting",
+    "Drawing",
+    "Printmaking",
+    "Book Arts",
+    "Illustration",
+    "Medical/Scientific Illustration",
+    "Comics",
+    "Sculpture",
+    "Ceramics",
+    "Metals",
+    "Glass",
+    "Woodworking",
+    "Textiles / Fibers",
+    "Performance Arts",
+    "Interdisciplinary Arts"
+
+  ],
+  musicOptions : [
+    "Music Education",
+    "Musical Theater",
+    "Production / Technology",
+    "Performance",
+    "Industry",
+    "Composition / Music Theory",
+    "Music Therapy",
+    "Music Studies / History",
+    "Music Types (Jazz, Hip Hop, etc.)",
+    "Conducting"
+  ],
+
+  theaterOptions: [
+    "Acting",
+    "Design / Technology / Production",
+    "Management / Industry",
+    "Performance Art",
+    "Musical Theater",
+    "Theater Education",
+    "Theater Studies / History",
+    "Directing / Playwriting / Dramaturgy",
+    "Drama Therapy"
+  ],
+
+  danceOptions: [
+    "Dance Education",
+    "Musical Theater",
+    "Performance Art",
+    "Dance Studies",
+    "Dance Science",
+    "Dance Types (Ballet, Modern, etc.)",
+    "Industry",
+    "Dance Therapy"
+  ],
+  film: [
+    "Production",
+    "Animation",
+    "Journalism / Broadcast / Communications",
+    "Industry",
+    "Film / Media Studies",
+    "Screenwriting",
+    "Direction",
+    "Acting",
+    "Documentary Filmaking / Studies"
+  ],
+  gameOptions: [
+    "Game Design",
+    "Game Development",
+    "Animation",
+    "Digital Design and Media",
+    "Industry"
+  ],
+  architectureOptions: [
+    "Architecture",
+    "Interior Design",
+    "Landscape Architecture",
+    "Architectural Studies / History",
+    "Industrial Design",
+    "Furniture Design",
+    "Global Environment Design",
+  ],
+  fashionOptions: [
+    "Fasion Design",
+    "Fashion Business / Merchandising",
+    "Technical / Textiles / Accessories"
+  ]
 };
