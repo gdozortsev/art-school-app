@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import { feature } from "topojson-client";
 import { useNavigate } from "react-router-dom";
-import { sample_programs, filterOptions } from "../../lib/utils/types";
+import { sample_programs, filterOptions, fullPrograms } from "../../lib/utils/types";
 import type {Program} from "../../lib/utils/types";
 import SchoolPopup from "../../components/map/SchoolPopup";
 import type { Topology, GeometryCollection } from "topojson-specification";
@@ -49,10 +49,29 @@ export default function USMap() {
       const current = prev[category];
       if (!Array.isArray(current)) return prev;
       
-      const newValues = current.includes(value)
-        ? current.filter(v => v !== value)
-        : [...current, value];
-      return { ...prev, [category]: newValues };
+      // Check if this is a main program with subprograms
+      const isMainProgram = fullPrograms.hasOwnProperty(value);
+      
+      if (isMainProgram) {
+        const subPrograms = fullPrograms[value];
+        const isCurrentlyChecked = current.includes(value);
+        
+        if (isCurrentlyChecked) {
+          // Uncheck main program and all its subprograms
+          const newValues = current.filter(v => v !== value && !subPrograms.includes(v));
+          return { ...prev, [category]: newValues };
+        } else {
+          // Check main program and all its subprograms
+          const newValues = [...current, value, ...subPrograms.filter(sp => !current.includes(sp))];
+          return { ...prev, [category]: newValues };
+        }
+      } else {
+        // Handle subprogram or regular item toggle
+        const newValues = current.includes(value)
+          ? current.filter(v => v !== value)
+          : [...current, value];
+        return { ...prev, [category]: newValues };
+      }
     });
   };
   function toggleList(program: string): void {
@@ -219,21 +238,67 @@ export default function USMap() {
 
         {/* Programs Filter */}
         <div style={{ marginBottom: "1.5rem" }}>
-          {/* <h4 style={{ fontSize: "0.9rem", marginBottom: "0.5rem" }}>Programs</h4> */}
           <div style={{ height: "600px", overflowY: "auto" }}>
             {filterOptions.programs.map(program => (
-              <label key={program} style={{ display: "block", marginBottom: "0.5rem", cursor: "pointer" }}>
-                <input
-                  type="checkbox"
-                  checked={filters.programs.includes(program)}
-                  onChange={() => toggleFilter("programs", program)}
-                  style={{ marginRight: "0.5rem" }}
-                />
-                <button onClick={() => toggleList(program)} className="text-button"> 
-                  {program}
-                  {droppedPrograms[program] ? <div style = {{marginLeft: 5}}> Hello! </div>: null}
-                </button>
-              </label>
+              <div key={program} style={{ marginBottom: "0.5rem" }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <input
+                    type="checkbox"
+                    checked={filters.programs.includes(program)}
+                    onChange={() => toggleFilter("programs", program)}
+                    style={{ marginRight: '0.5rem' }}
+                  />
+                  <button 
+                    onClick={() => toggleList(program)} 
+                    className="text-button"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      cursor: 'pointer'
+                    }}
+                  > 
+                    {program}
+                    <div style={{
+                      transform: droppedPrograms[program] ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.2s ease',
+                      marginLeft: '0.5rem'
+                    }}>
+                      ▼
+                    </div>
+                  </button>
+                </div>
+                
+                {droppedPrograms[program] && 
+                  <div style={{
+                    marginLeft: '1.5rem',
+                    marginTop: '0.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.5rem'
+                  }}>   
+                    {fullPrograms[program].map(subProgram => (
+                      <label 
+                        key={subProgram} 
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={filters.programs.includes(subProgram)}
+                          onChange={() => toggleFilter("programs", subProgram)}
+                          style={{ marginRight: '0.5rem' }}
+                        />
+                        {subProgram}
+                      </label>
+                    ))}
+                  </div>
+                }
+              </div>
             ))}
           </div>
         </div>

@@ -70,8 +70,12 @@ button:focus-visible {
 }
 
 .text-button:hover {
-  color: blue; 
+  color: rgb(0, 0, 2); 
   text-decoration: none; 
+}
+.text-button:focus,
+.text-button:focus-visible{
+  outline: none
 }
 
 @media (prefers-color-scheme: light) {

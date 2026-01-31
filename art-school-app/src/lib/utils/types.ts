@@ -154,27 +154,8 @@ export const sample_programs = [
   // Add more programs here...
 ];
 
-// Filter categories
-export const filterOptions = {
-  type: ["Art School", "Art School at University / College", "University / College"],
-  programs: [
-    "Architecture and Design",
-    "Dance",
-    "Fashion",
-    "Film",
-    "Game and Media Arts",
-    "Music",
-    "Theater",
-    "Visual Arts"
-  ],
-  // programs: {
-  //   "Architecture and Design": [
-  //     "Design"
-  //   ]
-  // },
-  //School size, make into sliding bar
-  enrollment: ["Small (<1000)", "Medium (1000-5000)", "Large (>5000)"],
-  visualArtOptions: [
+export const fullPrograms = {
+  "Visual Arts":[
     "Arts Industry",
     "Art History",
     "Museum Studies",
@@ -201,9 +182,17 @@ export const filterOptions = {
     "Textiles / Fibers",
     "Performance Arts",
     "Interdisciplinary Arts"
-
   ],
-  musicOptions : [
+  "Architecture and Design": [
+    "Architecture",
+    "Interior Design",
+    "Landscape Architecture",
+    "Architectural Studies / History",
+    "Industrial Design",
+    "Furniture Design",
+    "Global Environment Design",
+  ],
+  "Music": [
     "Music Education",
     "Musical Theater",
     "Production / Technology",
@@ -215,8 +204,7 @@ export const filterOptions = {
     "Music Types (Jazz, Hip Hop, etc.)",
     "Conducting"
   ],
-
-  theaterOptions: [
+  "Theater":[
     "Acting",
     "Design / Technology / Production",
     "Management / Industry",
@@ -227,8 +215,7 @@ export const filterOptions = {
     "Directing / Playwriting / Dramaturgy",
     "Drama Therapy"
   ],
-
-  danceOptions: [
+  "Dance": [
     "Dance Education",
     "Musical Theater",
     "Performance Art",
@@ -238,7 +225,7 @@ export const filterOptions = {
     "Industry",
     "Dance Therapy"
   ],
-  film: [
+  "Film": [
     "Production",
     "Animation",
     "Journalism / Broadcast / Communications",
@@ -249,25 +236,33 @@ export const filterOptions = {
     "Acting",
     "Documentary Filmaking / Studies"
   ],
-  gameOptions: [
+  "Game and Media Arts": [
     "Game Design",
     "Game Development",
     "Animation",
     "Digital Design and Media",
     "Industry"
   ],
-  architectureOptions: [
-    "Architecture",
-    "Interior Design",
-    "Landscape Architecture",
-    "Architectural Studies / History",
-    "Industrial Design",
-    "Furniture Design",
-    "Global Environment Design",
-  ],
-  fashionOptions: [
+  "Fashion": [
     "Fasion Design",
     "Fashion Business / Merchandising",
     "Technical / Textiles / Accessories"
   ]
+
+}
+// Filter categories
+export const filterOptions = {
+  type: ["Art School", "Art School at University / College", "University / College"],
+  programs: [
+    "Visual Arts",
+    "Architecture and Design",
+    "Dance",
+    "Fashion",
+    "Film",
+    "Game and Media Arts",
+    "Music",
+    "Theater"
+  ],
+  //School size, make into sliding bar
+  enrollment: ["Small (<1000)", "Medium (1000-5000)", "Large (>5000)"],
 };
