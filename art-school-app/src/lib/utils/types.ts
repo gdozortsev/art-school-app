@@ -250,11 +250,8 @@ export const fullPrograms = {
   ]
 
 }
-// Filter categories
-export const filterOptions = {
-  type: ["Art School", "Art School at University / College", "University / College"],
-  programs: [
-    "Visual Arts",
+export const programs = [
+  "Visual Arts",
     "Architecture and Design",
     "Dance",
     "Fashion",
@@ -262,7 +259,20 @@ export const filterOptions = {
     "Game and Media Arts",
     "Music",
     "Theater"
-  ],
-  //School size, make into sliding bar
-  enrollment: ["Small (<1000)", "Medium (1000-5000)", "Large (>5000)"],
-};
+]
+// Filter categories
+// export const filterOptions = {
+//   type: ["Art School", "Art School at University / College", "University / College"],
+//   programs: [
+//     "Visual Arts",
+//     "Architecture and Design",
+//     "Dance",
+//     "Fashion",
+//     "Film",
+//     "Game and Media Arts",
+//     "Music",
+//     "Theater"
+//   ],
+//   //School size, make into sliding bar
+//   enrollment: ["Small (<1000)", "Medium (1000-5000)", "Large (>5000)"],
+// };
