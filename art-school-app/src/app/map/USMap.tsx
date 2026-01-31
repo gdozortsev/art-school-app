@@ -7,6 +7,7 @@ import type {Program} from "../../lib/utils/types";
 import SchoolPopup from "../../components/map/SchoolPopup";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { Feature, FeatureCollection, GeoJsonProperties } from "geojson";
+import '../../index.css'; 
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
@@ -28,6 +29,10 @@ export default function USMap() {
     tuition: [],
     searchText: ""
   });
+
+  const [droppedPrograms, setDroppedPrograms] = useState<Record<string, boolean>>(
+    Object.fromEntries(filters.programs.map(program => [program, false]))
+  );
   const [hoveredProgram, setHoveredProgram] = useState<Program | null>(null);
 
   // Filter art programs based on selected filters
@@ -50,6 +55,12 @@ export default function USMap() {
       return { ...prev, [category]: newValues };
     });
   };
+  function toggleList(program: string): void {
+    setDroppedPrograms(prev => ({
+      ...prev,
+      [program]: !prev[program]
+    }));
+  }
 
   useEffect(() => {
     if (!svgRef.current) return;
@@ -188,7 +199,6 @@ export default function USMap() {
         overflowY: "auto",
         borderRight: "1px solid #dee2e6"
       }}>
-        <h3 style={{ marginTop: 0, marginBottom: "1rem" }}>Filters</h3>
         
         {/* Search */}
         <div style={{ marginBottom: "1.5rem" }}>
@@ -207,26 +217,10 @@ export default function USMap() {
           />
         </div>
 
-        {/* Type Filter */}
-        <div style={{ marginBottom: "1.5rem" }}>
-          <h4 style={{ fontSize: "0.9rem", marginBottom: "0.5rem" }}>School Type</h4>
-          {filterOptions.type.map(type => (
-            <label key={type} style={{ display: "block", marginBottom: "0.5rem", cursor: "pointer" }}>
-              <input
-                type="checkbox"
-                checked={filters.type.includes(type)}
-                onChange={() => toggleFilter("type", type)}
-                style={{ marginRight: "0.5rem" }}
-              />
-              {type}
-            </label>
-          ))}
-        </div>
-
         {/* Programs Filter */}
         <div style={{ marginBottom: "1.5rem" }}>
-          <h4 style={{ fontSize: "0.9rem", marginBottom: "0.5rem" }}>Programs</h4>
-          <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+          {/* <h4 style={{ fontSize: "0.9rem", marginBottom: "0.5rem" }}>Programs</h4> */}
+          <div style={{ height: "600px", overflowY: "auto" }}>
             {filterOptions.programs.map(program => (
               <label key={program} style={{ display: "block", marginBottom: "0.5rem", cursor: "pointer" }}>
                 <input
@@ -235,7 +229,10 @@ export default function USMap() {
                   onChange={() => toggleFilter("programs", program)}
                   style={{ marginRight: "0.5rem" }}
                 />
-                {program}
+                <button onClick={() => toggleList(program)} className="text-button"> 
+                  {program}
+                  {droppedPrograms[program] ? <div style = {{marginLeft: 5}}> Hello! </div>: null}
+                </button>
               </label>
             ))}
           </div>
@@ -245,6 +242,7 @@ export default function USMap() {
           Showing {filteredPrograms.length} of {sample_programs.length} programs
         </div>
       </div>
+      
 
       {/* Map Area */}
       <div style={{ flex: 1, textAlign: "center", paddingTop: "20px", position: "relative" }}>
@@ -256,3 +254,4 @@ export default function USMap() {
     </div>
   );
 }
+

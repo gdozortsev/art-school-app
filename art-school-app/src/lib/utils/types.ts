@@ -167,6 +167,11 @@ export const filterOptions = {
     "Theater",
     "Visual Arts"
   ],
+  // programs: {
+  //   "Architecture and Design": [
+  //     "Design"
+  //   ]
+  // },
   //School size, make into sliding bar
   enrollment: ["Small (<1000)", "Medium (1000-5000)", "Large (>5000)"],
   visualArtOptions: [
