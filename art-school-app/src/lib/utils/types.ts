@@ -154,7 +154,7 @@ export const sample_programs = [
   // Add more programs here...
 ];
 
-export const fullPrograms = {
+export const fullPrograms: Record<string, string[]> = {
   "Visual Arts":[
     "Arts Industry",
     "Art History",
@@ -249,7 +249,7 @@ export const fullPrograms = {
     "Technical / Textiles / Accessories"
   ]
 
-}
+};
 export const programs = [
   "Visual Arts",
     "Architecture and Design",
@@ -259,7 +259,7 @@ export const programs = [
     "Game and Media Arts",
     "Music",
     "Theater"
-]
+];
 // Filter categories
 // export const filterOptions = {
 //   type: ["Art School", "Art School at University / College", "University / College"],

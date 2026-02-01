@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import { feature } from "topojson-client";
 import { useNavigate } from "react-router-dom";
-import { sample_programs, programs, fullPrograms } from "../../lib/utils/types";
+import { sample_programs, programs } from "../../lib/utils/types";
 import type {Program} from "../../lib/utils/types";
 import SchoolPopup from "../../components/map/SchoolPopup";
 import Sidebar from "./Sidebar";

@@ -16,7 +16,7 @@ export default function Sidebar(props: SidebarProps){
         Object.fromEntries(programs.map(program => [program, false]))
     );
     const toggleFilter = (category: keyof Filters, value: string) => {
-        setFilters(prev => {
+        setFilters((prev: { [x: string]: any; }) => {
           const current = prev[category];
           if (!Array.isArray(current)) return prev;
           
@@ -66,7 +66,7 @@ export default function Sidebar(props: SidebarProps){
             type="text"
             placeholder="Search programs..."
             value={filters.searchText}
-            onChange={(e) => setFilters(prev => ({ ...prev, searchText: e.target.value }))}
+            onChange={(e) => setFilters((prev: any) => ({ ...prev, searchText: e.target.value }))}
             style={{
                 width: "95%",
                 padding: "0.5rem",
