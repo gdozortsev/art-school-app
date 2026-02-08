@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import USMap from "./app/map/USMap";
-import StateMap from "./app/map/StateMap";
+import Map from "./app/map/Map";
 import NavBar from "./app/NavBar";
 import Contacts from "./app/contact/Contact";
 
@@ -9,8 +8,8 @@ export default function App() {
     <BrowserRouter>
       <NavBar />
       <Routes>
-        <Route path="/" element={<USMap />} />
-        <Route path="/state/:stateId" element={<StateMap />} />
+        <Route path="/" element={<Map />} />
+        <Route path="/state/:stateId" element={<Map />} />
         <Route path="/contacts" element={<Contacts />} /> 
       </Routes>
     </BrowserRouter>

@@ -1,8 +1,10 @@
-import { useRef, useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useRef, useEffect, useState} from "react";
+import { Link } from "react-router-dom";
 import * as d3 from "d3";
 import { feature } from "topojson-client";
 import { getStateName } from "../../lib/utils/types";
+import type { Program } from "../../lib/utils/types";
+import SchoolPopup from "../../components/map/SchoolPopup";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { Feature, FeatureCollection, GeoJsonProperties } from "geojson";
 
@@ -10,8 +12,14 @@ const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
 type StateFeature = Feature<any, GeoJsonProperties>;
 
-export default function StateMap() {
-  const { stateId } = useParams<{ stateId: string }>();
+interface StateMapProps {
+  stateId: string;
+  filteredPrograms: any;
+  hoveredProgram: Program | null;
+  setHoveredProgram: any;
+}
+
+export default function StateMap({ stateId, filteredPrograms, hoveredProgram, setHoveredProgram }: StateMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [stateFeature, setStateFeature] = useState<StateFeature | null>(null);
 
@@ -21,8 +29,8 @@ export default function StateMap() {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    const width = 900;
-    const height = 600;
+    const width = 1200;
+    const height = 750;
 
     d3.json<Topology>(geoUrl).then((topology) => {
       if (!topology) return;
@@ -53,7 +61,7 @@ export default function StateMap() {
         .data(states)
         .enter()
         .append("path")
-        .attr("d", (d: StateFeature) => path(d) || "")
+        .attr("d", path)
         .attr("fill", (d: StateFeature) => String(d.id) === String(stateId) ? "#8176b2ff" : "#AABCF0")
         .attr("stroke", "#8176b2ff")
         .attr("stroke-width", (d: StateFeature) => String(d.id) === String(stateId) ? 2 : 1)
@@ -67,37 +75,82 @@ export default function StateMap() {
       const x = (bounds[0][0] + bounds[1][0]) / 2;
       const y = (bounds[0][1] + bounds[1][1]) / 2;
       const scale = Math.min(8, 0.9 / Math.max(dx / width, dy / height));
+      console.log(scale)
       const translate = [width / 2 - scale * x, height / 2 - scale * y];
 
       // Apply zoom transform
       g.attr("transform", `translate(${translate})scale(${scale})`);
+
+      // Filter programs for this state
+      const statePrograms = filteredPrograms.filter((program: any) => 
+        String(program.stateId) === String(stateId)
+      );
+
+      // Add Google-style pin markers for art programs in this state
+      const markers = g.selectAll(".marker")
+        .data(statePrograms)
+        .enter()
+        .append("g")
+        .attr("class", "marker")
+        .attr("transform", (d: any) => {
+          const coords = projection([d.longitude, d.latitude]);
+          //THIS IS THE FIX FOR CONSTANTLY RELOADING!!
+          d.x = coords ? coords[0] : -100
+          d.y = coords ? coords[1] : -100
+          return coords ? `translate(${coords[0]},${coords[1]})` : `translate(-100,-100)`;
+        }) 
+        .style("cursor", "pointer")
+        .on("mouseenter", function(event: MouseEvent, d: any) {
+          d3.select(this).select(".pin-body").attr("transform", "scale(1.2)");
+          setHoveredProgram(d)
+        })
+        .on("mouseleave", function() {
+          d3.select(this).select(".pin-body").attr("transform", "scale(1)");
+          setHoveredProgram(null);
+        });
+
+      // Draw pin shape (Google Maps style)
+      markers.each(function() {
+        const marker = d3.select(this);
+        
+        const pinGroup = marker.append("g")
+          .attr("class", "pin-body");
+        
+        // Pin body (teardrop shape)
+        pinGroup.append("path")
+          .attr("d", "M 0,-30 C -8,-30 -15,-23 -15,-15 C -15,-8 0,0 0,0 C 0,0 15,-8 15,-15 C 15,-23 8,-30 0,-30 Z")
+          .attr("fill", "#EA4335")
+          .attr("stroke", "#fff")
+          .attr("stroke-width", 2);
+        
+        // Inner circle
+        pinGroup.append("circle")
+          .attr("cx", 0)
+          .attr("cy", -15)
+          .attr("r", 6)
+          .attr("fill", "#fff");
+      });
+
     });
-  }, [stateId]);
+  }, [stateId, filteredPrograms, setHoveredProgram]);
 
   return (
-    <div style={{ 
-      height: "calc(100vh - 64px)",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "2rem",
-      boxSizing: "border-box",
-      overflow: "auto"
-    }}>
-      <h2 style={{ margin: 0, marginBottom: "1rem" }}>
-        {stateFeature ? getStateName(stateId) : "Loading..."}
-      </h2>
-      <svg ref={svgRef} width={900} height={600} style={{ display: "block" }} />
+    <>
+      {/* <h2>{stateFeature ? getStateName(stateId) : "Loading..."}</h2>
+      <br /> */}
+      <svg ref={svgRef} width='100% 'height='100%' style={{ marginTop: 0 }} />
       <div style={{ marginTop: "2rem" }}>
         <Link to="/" style={{
-          color: "#77bbc7ff",
+          color: "#4a90e2",
           textDecoration: "none",
           fontSize: "1rem"
         }}>
           ← Back to US Map
         </Link>
       </div>
-    </div>
+      
+      {/* Tooltip with tail */}
+      {hoveredProgram && <SchoolPopup hoveredProgram={hoveredProgram} />}
+    </>
   );
 }

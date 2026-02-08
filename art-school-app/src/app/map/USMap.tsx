@@ -1,44 +1,31 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect} from "react";
 import * as d3 from "d3";
 import { feature } from "topojson-client";
 import { useNavigate } from "react-router-dom";
-import { sample_programs, programs } from "../../lib/utils/types";
-import type {Program} from "../../lib/utils/types";
+import type { Program } from "../../lib/utils/types";
 import SchoolPopup from "../../components/map/SchoolPopup";
-import Sidebar from "./Sidebar";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { Feature, FeatureCollection, GeoJsonProperties } from "geojson";
-import '../../index.css'; 
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
 type StateFeature = Feature<any, GeoJsonProperties>;
-interface Filters{
-   programs: string[],
-   searchText: string
+
+interface USMapProps {
+  filteredPrograms: Program[];
+  hoveredProgram: Program | null;
+  setHoveredProgram: any;
 }
-export default function USMap() {
+
+export default function USMap({ filteredPrograms, hoveredProgram, setHoveredProgram }: USMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const navigate = useNavigate();
-  const [filters, setFilters] = useState<Filters>({
-    programs: [],
-    searchText: ""
-  });
-  const [hoveredProgram, setHoveredProgram] = useState<Program | null>(null);
-
-  // Filter art programs based on selected filters
-  
-  const filteredPrograms = sample_programs.filter(program => {
-      if (filters.programs.length > 0 && !programs.some(p => program.programs.includes(p))) return false;
-      if (filters.searchText && !program.name.toLowerCase().includes(filters.searchText.toLowerCase())) return false;
-      return true;
-    });
 
   useEffect(() => {
     if (!svgRef.current) return;
 
-    const width = 900;
-    const height = 600;
+    const width = 1100;
+    const height = 750;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
@@ -67,9 +54,8 @@ export default function USMap() {
         .enter()
         .append("path")
         .attr("d", (d: StateFeature) => path(d) || "")
-        //MAP COLORS
-        .attr("fill", "#c0acd4ff")
-        .attr("stroke", "#482c68ff")
+        .attr("fill", "#AABCF0")
+        .attr("stroke", "#8176b2ff")
         .attr("class", "state-path")
         .style("cursor", "pointer")
         .on("click", function(event: MouseEvent, d: StateFeature) {
@@ -117,9 +103,9 @@ export default function USMap() {
         .attr("class", "marker")
         .attr("transform", (d: any) => {
           const coords = projection([d.longitude, d.latitude]);
+          //THIS IS THE FIX FOR CONSTANTLY RELOADING!!
           d.x = coords ? coords[0] : -100
           d.y = coords ? coords[1] : -100
-          console.log("here are all the projected coords", coords, " and here are the ogs", d.longitude, d.latitude)
           return coords ? `translate(${coords[0]},${coords[1]})` : `translate(-100,-100)`;
         })
         .style("cursor", "pointer")
@@ -142,8 +128,8 @@ export default function USMap() {
         // Pin body (teardrop shape)
         pinGroup.append("path")
           .attr("d", "M 0,-30 C -8,-30 -15,-23 -15,-15 C -15,-8 0,0 0,0 C 0,0 15,-8 15,-15 C 15,-23 8,-30 0,-30 Z")
-          .attr("fill", "#cd2525ff")
-          .attr("stroke", "#ffffffff")
+          .attr("fill", "#EA4335")
+          .attr("stroke", "#fff")
           .attr("stroke-width", 2);
         
         // Inner circle
@@ -151,29 +137,18 @@ export default function USMap() {
           .attr("cx", 0)
           .attr("cy", -15)
           .attr("r", 6)
-          .attr("fill", "#ffffffff");
+          .attr("fill", "#fff");
       });
 
     });
-  }, [navigate, filteredPrograms]);
+  }, [navigate, filteredPrograms, setHoveredProgram]);
 
   return (
-    <div style={{ 
-      display: "flex", 
-      height: "100vh",
-      overflow: "hidden"
-    }}>
-      <Sidebar filters = {filters} setFilters = {setFilters} filteredPrograms = {filteredPrograms}/>
+    <>
+      <svg ref={svgRef} width='100%' height='100%' />
       
-
-      {/* Map Area */}
-      <div style={{ flex: 1, textAlign: "center", paddingTop: "20px", position: "relative" }}>
-        <svg ref={svgRef} width={900} height={600} />
-        
-        {/* Tooltip with tail */}
-        {hoveredProgram && (<SchoolPopup hoveredProgram={hoveredProgram}/>)}
-      </div>
-    </div>
+      {/* Tooltip with tail */}
+      {hoveredProgram && <SchoolPopup hoveredProgram={hoveredProgram} />}
+    </>
   );
 }
-
