@@ -1,8 +1,7 @@
+"use client"
 import { useRef, useEffect, useState} from "react";
-import { Link } from "react-router-dom";
 import * as d3 from "d3";
 import { feature } from "topojson-client";
-import { getStateName } from "../../lib/utils/types";
 import type { Program } from "../../lib/utils/types";
 import SchoolPopup from "../../components/map/SchoolPopup";
 import type { Topology, GeometryCollection } from "topojson-specification";
@@ -135,22 +134,28 @@ export default function StateMap({ stateId, filteredPrograms, hoveredProgram, se
   }, [stateId, filteredPrograms, setHoveredProgram]);
 
   return (
-    <>
-      {/* <h2>{stateFeature ? getStateName(stateId) : "Loading..."}</h2>
-      <br /> */}
-      <svg ref={svgRef} width='100% 'height='100%' style={{ marginTop: 0 }} />
-      <div style={{ marginTop: "2rem" }}>
-        <Link to="/" style={{
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <svg ref={svgRef} width="100%" height="100%" style={{ marginTop: 0 }} />
+      
+      <div style={{ 
+        position: "absolute", 
+        bottom: "1rem", 
+        left: "1rem" 
+      }}>
+        <a href="/" style={{
           color: "#4a90e2",
           textDecoration: "none",
-          fontSize: "1rem"
+          fontSize: "1rem",
+          backgroundColor: "white",
+          padding: "0.5rem 1rem",
+          borderRadius: "8px",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.2)"
         }}>
           ← Back to US Map
-        </Link>
+        </a>
       </div>
-      
-      {/* Tooltip with tail */}
+
       {hoveredProgram && <SchoolPopup hoveredProgram={hoveredProgram} />}
-    </>
+    </div>
   );
 }

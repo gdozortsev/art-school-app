@@ -1,7 +1,8 @@
+"use client"
 import { useRef, useEffect} from "react";
+import { useRouter } from "next/navigation";
 import * as d3 from "d3";
 import { feature } from "topojson-client";
-import { useNavigate } from "react-router-dom";
 import type { Program } from "../../lib/utils/types";
 import SchoolPopup from "../../components/map/SchoolPopup";
 import type { Topology, GeometryCollection } from "topojson-specification";
@@ -19,7 +20,7 @@ interface USMapProps {
 
 export default function USMap({ filteredPrograms, hoveredProgram, setHoveredProgram }: USMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     if (!svgRef.current) return;
@@ -85,7 +86,7 @@ export default function USMap({ filteredPrograms, hoveredProgram, setHoveredProg
             .duration(750)
             .attr("transform", `translate(${translate})scale(${scale})`)
             .on("end", () => {
-              setTimeout(() => navigate(`/state/${d.id}`), 200);
+              setTimeout(() => router.push(`/state/${d.id}`), 200);
             });
         })
         .on("mouseenter", function() {
@@ -141,7 +142,7 @@ export default function USMap({ filteredPrograms, hoveredProgram, setHoveredProg
       });
 
     });
-  }, [navigate, filteredPrograms, setHoveredProgram]);
+  }, [router, filteredPrograms, setHoveredProgram]);
 
   return (
     <>

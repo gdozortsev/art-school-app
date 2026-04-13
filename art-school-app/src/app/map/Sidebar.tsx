@@ -1,3 +1,4 @@
+"use client"
 import {useState } from "react";
 import {sample_programs, programs, fullPrograms } from "../../lib/utils/types";
 interface Filters{
@@ -56,8 +57,7 @@ export default function Sidebar(props: SidebarProps){
                 width: "300px",
                 backgroundColor: "#77bbc7ff",
                 padding: "1.5rem",
-                overflowY: "auto",
-                borderRight: "1px solid #dee2e6"
+                overflowY: "auto"
               }}>
                 
         {/* Search */}
@@ -97,7 +97,11 @@ export default function Sidebar(props: SidebarProps){
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         width: '100%',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        fontFamily: 'inherit',
+                        fontSize: '1rem',
+                        background: 'none',
+                        border: 'none'
                     }}
                     > 
                     {program}

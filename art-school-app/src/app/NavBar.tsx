@@ -26,7 +26,7 @@ export default function NavBar({ currentPath = "/" }) {
         
         <div style={{ display: "flex", gap: "2rem" }}>
           <a
-            href="./contacts"
+            href="/contacts"
             style={{
               color: currentPath === "/" ? "#2a2a2aff" : "white",
               textDecoration: "none",
