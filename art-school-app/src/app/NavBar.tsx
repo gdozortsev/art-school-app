@@ -2,7 +2,7 @@
 export default function NavBar({ currentPath = "/" }) {
   return (
     <nav style={{
-      backgroundColor: "  #ffffffff",
+      backgroundColor: "#008488",
       padding: "1rem 2rem",
       boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
     }}>
@@ -15,7 +15,7 @@ export default function NavBar({ currentPath = "/" }) {
         <a 
           href="/" 
           style={{
-            color: "#2a2a2aff",
+            color: "#fffafaff",
             textDecoration: "none",
             fontSize: "1.5rem",
             fontWeight: "bold"
@@ -28,7 +28,7 @@ export default function NavBar({ currentPath = "/" }) {
           <a
             href="/contacts"
             style={{
-              color: currentPath === "/" ? "#2a2a2aff" : "white",
+              color: currentPath === "/" ? "#fffcfcff" : "white",
               textDecoration: "none",
               fontSize: "1rem",
               fontWeight: currentPath === "/" ? "600" : "400",

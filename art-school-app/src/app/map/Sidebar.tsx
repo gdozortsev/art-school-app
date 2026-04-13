@@ -55,7 +55,7 @@ export default function Sidebar(props: SidebarProps){
     return (
         <div style={{
                 width: "300px",
-                backgroundColor: "#77bbc7ff",
+                backgroundColor: "#008488",
                 padding: "1.5rem",
                 overflowY: "auto"
               }}>
@@ -99,6 +99,7 @@ export default function Sidebar(props: SidebarProps){
                         width: '100%',
                         cursor: 'pointer',
                         fontFamily: 'inherit',
+                        color: 'white',
                         fontSize: '1rem',
                         background: 'none',
                         border: 'none'
@@ -129,7 +130,8 @@ export default function Sidebar(props: SidebarProps){
                         style={{
                             display: 'flex',
                             alignItems: 'center',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            color: 'white',
                         }}
                         >
                         <input
@@ -148,7 +150,7 @@ export default function Sidebar(props: SidebarProps){
             </div>
         </div>
 
-        <div style={{ fontSize: "0.85rem", color: "#6c757d", marginTop: "1rem" }}>
+        <div style={{ fontSize: "0.85rem", color: "#ecececff", marginTop: "1rem" }}>
             Showing {filteredPrograms.length} of {sample_programs.length} programs
         </div>
         </div>
