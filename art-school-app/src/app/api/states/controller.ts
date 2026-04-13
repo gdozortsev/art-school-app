@@ -1,9 +1,6 @@
 import { prisma } from "../../../lib/prisma"
-import { USState, School } from "@prisma/client"
+import { USState } from "@prisma/client"
 
-// export type StateWithSchools = USState & {
-//     schools: School[]
-// }
 
 export const getAllStatesController = async(): Promise<{
     states: USState[]

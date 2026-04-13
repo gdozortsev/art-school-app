@@ -1,3 +1,4 @@
+import { School, Program as P } from "@prisma/client"
 export interface Program{
   id: number;
   name: string;
@@ -13,6 +14,10 @@ export interface Program{
   x: number | null;           
   y: number | null;           
 }
+
+export type SchoolWithPrograms = School & {
+    Program: P[]
+};
 
 export const stateNames: Record<string, string> = {
   "01": "Alabama",
