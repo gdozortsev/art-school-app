@@ -22,12 +22,21 @@ export const getOneSchool = async (options?: {
 };
 
 export const getAllSchools = async (): Promise<
-  { state: School[]; } | undefined
+  { schools: School[]; } | undefined
 > => {
   try {
     const response = await axios.get(`/api/school`, {});
     return response.data;
   } catch (error) {
     console.error("Failed to get users: ", error);
+  }
+};
+
+export const updateSchool = async (school: School): Promise<School | undefined> => {
+  try {
+    const response = await axios.put("/api/school", school);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update user: ", error);
   }
 };

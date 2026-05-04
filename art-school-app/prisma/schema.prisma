@@ -29,6 +29,8 @@ model School {
   city             String?   @db.VarChar(100)
   school_size      Int?
   state_name       String?   @db.VarChar(100)
+  longitude        Float?
+  latitude         Float?
   Program          Program[]
   State            USState?  @relation(fields: [state_name], references: [state_name], onDelete: NoAction, onUpdate: NoAction, map: "Schools_state_name_fkey")
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getAllSchoolsController } from './controller';
-import { getOneSchoolController } from './controller';
+import { getAllSchoolsController, getOneSchoolController, putSchoolController } from './controller';
+import { School } from '@prisma/client'
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -15,4 +15,24 @@ export async function GET(req: Request) {
     } catch (error) {
         return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
     }
+}
+export async function PUT(req: Request) {
+
+  try {
+    const schoolData: School = await req.json();
+    const updatedSchool = putSchoolController(schoolData);
+    return NextResponse.json(updatedSchool, { status: 200 });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: "Failed to update school:" + error },
+        { status: 500 }
+      );
+    } else {
+      return NextResponse.json(
+        { error: "Failed to update school: an unknown error occurred." },
+        { status: 500 }
+      );
+    }
+  }
 }

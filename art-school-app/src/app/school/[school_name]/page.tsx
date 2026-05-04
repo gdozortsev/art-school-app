@@ -1,5 +1,5 @@
 "use client"
-import { getOneSchool } from "@/src/lib/schools/schools";
+import { getOneSchool, updateSchool } from "@/src/lib/schools/schools";
 import { use, useEffect, useState } from "react";
 import { SchoolWithPrograms, programs } from "@/src/lib/utils/types";
 
@@ -17,6 +17,24 @@ export default function SchoolPage({ params }: { params: Promise<{ school_name: 
   }, [decodedName]);
 
   if (!school) return <div>Loading...</div>;
+
+  const getCoordinates = async () => {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(school.location)}&format=json&limit=1`,
+      { headers: { "User-Agent": "art-school-app" } }
+    );
+    const data = await response.json();
+    if (data.length > 0) {
+      const updatedSchool = {
+        ...school,
+        latitude: parseFloat(data[0].lat),
+        longitude: parseFloat(data[0].lon)
+      };
+      await updateSchool(updatedSchool);
+    } else {
+      console.log("No results found for", school.location);
+    }
+  };
 
 
   return (
@@ -39,7 +57,7 @@ export default function SchoolPage({ params }: { params: Promise<{ school_name: 
         <div style={{ background: "white", padding: "2rem" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "3rem" }}>
             {programs.map(program => (
-              <button key={program} style={{ background: "#008488" , color: "white", border: "none", borderRadius: "8px", padding: ".75rem", fontSize: "17px", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <button onClick = {getCoordinates} key={program} style={{ background: "#008488" , color: "white", border: "none", borderRadius: "8px", padding: ".75rem", fontSize: "17px", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 {program} Majors <span style={{ fontSize: "0.75rem", marginLeft: "3px" }}>▼</span>
               </button>
             ))}

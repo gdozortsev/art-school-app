@@ -12,17 +12,33 @@ export default function NavBar({ currentPath = "/" }) {
         alignItems: "center",
         justifyContent: "space-between"
       }}>
-        <a 
-          href="/" 
-          style={{
-            color: "#fffafaff",
-            textDecoration: "none",
-            fontSize: "1.5rem",
-            fontWeight: "bold"
-          }}
-        >
-          Home
-        </a>
+        <div style = {{display: "flex", gap: "2rem", alignItems: "center", whiteSpace: "nowrap"}}>
+            <a 
+            href="/" 
+            style={{
+              color: "#fffafaff",
+              textDecoration: "none",
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+              flex: 1
+            }}
+          >
+            Home
+          </a>
+          <a 
+            href="/all" 
+            style={{
+              color: "#fffafaff",
+              textDecoration: "none",
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+              flex: 1
+            }}
+          >
+            All Schools
+          </a>
+        </div>
+       
         
         <div style={{ display: "flex", gap: "2rem" }}>
           <a
@@ -30,7 +46,7 @@ export default function NavBar({ currentPath = "/" }) {
             style={{
               color: currentPath === "/" ? "#fffcfcff" : "white",
               textDecoration: "none",
-              fontSize: "1rem",
+              fontSize: "1.5rem",
               fontWeight: currentPath === "/" ? "600" : "400",
               transition: "color 0.3s"
             }}

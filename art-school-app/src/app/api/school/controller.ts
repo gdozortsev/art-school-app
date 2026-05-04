@@ -1,15 +1,17 @@
 import { prisma } from "../../../lib/prisma"
-import { School } from "@prisma/client"
+import { Program, School } from "@prisma/client"
 import { SchoolWithPrograms } from "@/src/lib/utils/types";
 
 
 export const getAllSchoolsController = async(): Promise<{
-    school: School[]
+    schools: School[]
 }> => {
     try {
-        const allSchools = await prisma.school.findMany({});
+        const allSchools = await prisma.school.findMany({
+            orderBy: { school_name: "asc" }
+        });
         return {
-            school: allSchools
+            schools: allSchools
         };
     } catch (error) {
         console.error("Error fetching all schools: ", error);
@@ -40,4 +42,21 @@ export const getOneSchoolController = async(
         console.error("Error fetching all schools: ", error);
         throw error;
     }
+};
+
+export const putSchoolController = async (schoolData: School): Promise<School> => {
+  try {
+    const updatedSchool = await prisma.school.update({
+      where: { school_name: schoolData.school_name },
+      data: {
+        latitude: schoolData.latitude,
+        longitude: schoolData.longitude,
+      },
+    });
+
+    return updatedSchool;
+  } catch (error) {
+    console.error("Error updating school", error);
+    throw error;
+  }
 };
