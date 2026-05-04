@@ -1,1 +1,1 @@
-Welcome to art school app! Go to iwanttogotoartschool.com to explore.
+Welcome to art school app! Go to iwanttogotoartschool.com to explore!
