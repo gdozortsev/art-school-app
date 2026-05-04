@@ -14,7 +14,7 @@ export default function Home() {
   const [filters, setFilters] = useState<Filters>({ programs: [], searchText: "" });
   const [hoveredProgram, setHoveredProgram] = useState<Program | null>(null);
 
-  const filteredPrograms = sample_programs.filter(program => {
+  const filteredPrograms: Program[] = sample_programs.filter(program => {
     if (filters.programs.length > 0 && !filters.programs.some(p => program.programs.includes(p))) return false;
     if (filters.searchText && !program.name.toLowerCase().includes(filters.searchText.toLowerCase())) return false;
     return true;

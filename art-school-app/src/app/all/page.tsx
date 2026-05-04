@@ -1,7 +1,7 @@
 "use client"
 import { getAllSchools } from "@/src/lib/schools/schools";
 import { useEffect, useState } from "react";
-import { School } from "@/src/generated/prisma";
+import { School} from "@prisma/client"
 import { useRouter } from "next/navigation";
 
 export default function SchoolPage() {

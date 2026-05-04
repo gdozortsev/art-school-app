@@ -11,8 +11,8 @@ export interface Program{
   enrollment: string;  
   tuition: string;     
   website: string;     
-  x: number | null;           
-  y: number | null;           
+  x?: number;           
+  y?: number;           
 }
 
 export type SchoolWithPrograms = School & {
