@@ -2,7 +2,7 @@
 export default function NavBar({ currentPath = "/" }) {
   return (
     <nav style={{
-      backgroundColor: "  #ffffffff",
+      backgroundColor: "#008488",
       padding: "1rem 2rem",
       boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
     }}>
@@ -12,25 +12,41 @@ export default function NavBar({ currentPath = "/" }) {
         alignItems: "center",
         justifyContent: "space-between"
       }}>
-        <a 
-          href="/" 
-          style={{
-            color: "#2a2a2aff",
-            textDecoration: "none",
-            fontSize: "1.5rem",
-            fontWeight: "bold"
-          }}
-        >
-          Home
-        </a>
+        <div style = {{display: "flex", gap: "2rem", alignItems: "center", whiteSpace: "nowrap"}}>
+            <a 
+            href="/" 
+            style={{
+              color: "#fffafaff",
+              textDecoration: "none",
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+              flex: 1
+            }}
+          >
+            Home
+          </a>
+          <a 
+            href="/all" 
+            style={{
+              color: "#fffafaff",
+              textDecoration: "none",
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+              flex: 1
+            }}
+          >
+            All Schools
+          </a>
+        </div>
+       
         
         <div style={{ display: "flex", gap: "2rem" }}>
           <a
-            href="./contacts"
+            href="/contacts"
             style={{
-              color: currentPath === "/" ? "#2a2a2aff" : "white",
+              color: currentPath === "/" ? "#fffcfcff" : "white",
               textDecoration: "none",
-              fontSize: "1rem",
+              fontSize: "1.5rem",
               fontWeight: currentPath === "/" ? "600" : "400",
               transition: "color 0.3s"
             }}

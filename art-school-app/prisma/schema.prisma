@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Program {
+  id                  Int     @id @default(autoincrement())
+  school_name         String
+  admissions_email    String
+  discipline          String
+  degree              String?
+  website             String?
+  location            String
+  state               String
+  school_size         Int?
+  city                String?
+  umbrella_discipline String?
+  School              School  @relation(fields: [school_name], references: [school_name], onDelete: NoAction, onUpdate: NoAction, map: "fk_school")
+}
+
+model School {
+  school_name      String    @id(map: "Schools_pkey") @db.VarChar(255)
+  admissions_email String?   @db.VarChar(255)
+  location         String?   @db.VarChar(255)
+  city             String?   @db.VarChar(100)
+  school_size      Int?
+  state_name       String?   @db.VarChar(100)
+  longitude        Float?
+  latitude         Float?
+  Program          Program[]
+  State            USState?  @relation(fields: [state_name], references: [state_name], onDelete: NoAction, onUpdate: NoAction, map: "Schools_state_name_fkey")
+}
+
+model USState {
+  state_name   String   @id(map: "States_pkey") @db.VarChar(100)
+  state_number Int?
+  School       School[]
+}

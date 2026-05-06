@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-
+"use client";
 export default function Contacts() {
+  
   return (
     <div style={{
       textAlign: "center",
@@ -46,13 +46,13 @@ export default function Contacts() {
       </div>
 
       <div style={{ marginTop: "2rem" }}>
-        <Link to="/" style={{
+        <a href="/" style={{
           color: "#4a90e2",
           textDecoration: "none",
           fontSize: "1rem"
         }}>
           ← Back to Map
-        </Link>
+        </a>
       </div>
     </div>
   );

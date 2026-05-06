@@ -7,8 +7,9 @@ const SchoolPopup = (props: SchoolPopupProps) => {
     return (
         <div style={{
             position: "absolute",
-            left: `${hoveredProgram.x - 20}px`,
-            top: `${hoveredProgram.y - 200}px`,
+            //TODO: fix this
+            left: `${hoveredProgram.x! - 150}px`,
+            top: `${hoveredProgram.y! - 250}px`,
             pointerEvents: "none",
             width: "300px",
             zIndex: 1000

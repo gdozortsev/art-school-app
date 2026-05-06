@@ -1,4 +1,6 @@
+import { School, Program as P } from "@prisma/client"
 export interface Program{
+  id: number;
   name: string;
   city: string;
   state: string;
@@ -9,9 +11,13 @@ export interface Program{
   enrollment: string;  
   tuition: string;     
   website: string;     
-  x: number;           
-  y: number;           
+  x?: number;           
+  y?: number;           
 }
+
+export type SchoolWithPrograms = School & {
+    Program: P[]
+};
 
 export const stateNames: Record<string, string> = {
   "01": "Alabama",
@@ -87,7 +93,7 @@ export const sample_programs = [
     longitude: -71.4025,
     type: "University",
     programs: ["Fine Arts", "Graphic Design", "Industrial Design", "Illustration"],
-    enrollment: 2500,
+    enrollment: '2500',
     tuition: "High",
     website: "https://www.risd.edu"
   },
@@ -102,7 +108,7 @@ export const sample_programs = [
     longitude: -118.5661,
     type: "University",
     programs: ["Animation", "Fine Arts", "Film", "Theater"],
-    enrollment: 1500,
+    enrollment: '1500',
     tuition: "High",
     website: "https://www.calarts.edu"
   },
@@ -117,7 +123,7 @@ export const sample_programs = [
     longitude: -87.6298,
     type: "University",
     programs: ["Fine Arts", "Fashion Design", "Architecture", "Photography"],
-    enrollment: 3600,
+    enrollment: '3600',
     tuition: "High",
     website: "https://www.saic.edu"
   },
@@ -132,7 +138,7 @@ export const sample_programs = [
     longitude: -73.9639,
     type: "University",
     programs: ["Architecture", "Industrial Design", "Interior Design", "Fine Arts"],
-    enrollment: 4700,
+    enrollment: '4700',
     tuition: "High",
     website: "https://www.pratt.edu"
   },
@@ -147,14 +153,14 @@ export const sample_programs = [
     longitude: -81.0912,
     type: "University",
     programs: ["Graphic Design", "Animation", "Fashion", "Game Design"],
-    enrollment: 14000,
+    enrollment: '14000',
     tuition: "High",
     website: "https://www.scad.edu"
   },
   // Add more programs here...
 ];
 
-export const fullPrograms = {
+export const fullPrograms: Record<string, string[]> = {
   "Visual Arts":[
     "Arts Industry",
     "Art History",
@@ -249,7 +255,7 @@ export const fullPrograms = {
     "Technical / Textiles / Accessories"
   ]
 
-}
+};
 export const programs = [
   "Visual Arts",
     "Architecture and Design",
@@ -259,7 +265,7 @@ export const programs = [
     "Game and Media Arts",
     "Music",
     "Theater"
-]
+];
 // Filter categories
 // export const filterOptions = {
 //   type: ["Art School", "Art School at University / College", "University / College"],

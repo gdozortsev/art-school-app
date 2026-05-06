@@ -1,3 +1,4 @@
+"use client"
 import {useState } from "react";
 import {sample_programs, programs, fullPrograms } from "../../lib/utils/types";
 interface Filters{
@@ -16,7 +17,7 @@ export default function Sidebar(props: SidebarProps){
         Object.fromEntries(programs.map(program => [program, false]))
     );
     const toggleFilter = (category: keyof Filters, value: string) => {
-        setFilters(prev => {
+        setFilters((prev: { [x: string]: any; }) => {
           const current = prev[category];
           if (!Array.isArray(current)) return prev;
           
@@ -54,10 +55,9 @@ export default function Sidebar(props: SidebarProps){
     return (
         <div style={{
                 width: "300px",
-                backgroundColor: "#77bbc7ff",
+                backgroundColor: "#008488",
                 padding: "1.5rem",
-                overflowY: "auto",
-                borderRight: "1px solid #dee2e6"
+                overflowY: "auto"
               }}>
                 
         {/* Search */}
@@ -66,7 +66,7 @@ export default function Sidebar(props: SidebarProps){
             type="text"
             placeholder="Search programs..."
             value={filters.searchText}
-            onChange={(e) => setFilters(prev => ({ ...prev, searchText: e.target.value }))}
+            onChange={(e) => setFilters((prev: any) => ({ ...prev, searchText: e.target.value }))}
             style={{
                 width: "95%",
                 padding: "0.5rem",
@@ -97,7 +97,12 @@ export default function Sidebar(props: SidebarProps){
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         width: '100%',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        fontFamily: 'inherit',
+                        color: 'white',
+                        fontSize: '1rem',
+                        background: 'none',
+                        border: 'none'
                     }}
                     > 
                     {program}
@@ -125,7 +130,8 @@ export default function Sidebar(props: SidebarProps){
                         style={{
                             display: 'flex',
                             alignItems: 'center',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            color: 'white',
                         }}
                         >
                         <input
@@ -144,7 +150,7 @@ export default function Sidebar(props: SidebarProps){
             </div>
         </div>
 
-        <div style={{ fontSize: "0.85rem", color: "#6c757d", marginTop: "1rem" }}>
+        <div style={{ fontSize: "0.85rem", color: "#ecececff", marginTop: "1rem" }}>
             Showing {filteredPrograms.length} of {sample_programs.length} programs
         </div>
         </div>
