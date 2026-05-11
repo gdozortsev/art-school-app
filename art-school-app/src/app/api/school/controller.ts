@@ -1,5 +1,5 @@
 import { prisma } from "../../../lib/prisma"
-import { Program, School } from "@prisma/client"
+import { School } from "@prisma/client"
 import { SchoolWithPrograms } from "@/src/lib/utils/types";
 
 

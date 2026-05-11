@@ -1,6 +1,7 @@
 "use client"
-import {useState } from "react";
-import {sample_programs, programs, fullPrograms } from "../../lib/utils/types";
+import {useEffect, useState } from "react";
+import {sample_programs, programs} from "../../lib/utils/types";
+import { getStaticDisciplines } from "@/src/lib/utils/disciplines";
 interface Filters{
    programs: string[],
    searchText: string
@@ -11,47 +12,57 @@ interface SidebarProps{
     filteredPrograms: any
 }
 export default function Sidebar(props: SidebarProps){
-    const {filters, setFilters, filteredPrograms} = props
-    // const [filters, setFilters] = useState<Filters>({programs: [], searchText: ""});
-    const [droppedPrograms, setDroppedPrograms] = useState<Record<string, boolean>>(
-        Object.fromEntries(programs.map(program => [program, false]))
-    );
-    const toggleFilter = (category: keyof Filters, value: string) => {
-        setFilters((prev: { [x: string]: any; }) => {
-          const current = prev[category];
-          if (!Array.isArray(current)) return prev;
+  const {filters, setFilters, filteredPrograms} = props
+  const [droppedPrograms, setDroppedPrograms] = useState<Record<string, boolean>>(
+      Object.fromEntries(programs.map(program => [program, false]))
+  );
+  const [disciplineMapping, setDisciplineMapping] = useState<Record<string, string[]>>({});
+
+  useEffect(() => {
+    const fetchMapping = async () => {
+      const data = await getStaticDisciplines();
+      setDisciplineMapping(data);
+    };
+    fetchMapping();
+  }, []);
+
+  const toggleFilter = (category: keyof Filters, value: string) => {
+      setFilters((prev: { [x: string]: any; }) => {
+        const current = prev[category];
+        if (!Array.isArray(current)) return prev;
+        
+        // Check if this is a main program with subprograms
+        const subPrograms = disciplineMapping[value]; 
+        const isMainProgram = !!subPrograms;
+        
+        if (isMainProgram) {
+          const isCurrentlyChecked = current.includes(value);
           
-          // Check if this is a main program with subprograms
-          const isMainProgram = fullPrograms.hasOwnProperty(value);
-          
-          if (isMainProgram) {
-            const subPrograms = fullPrograms[value];
-            const isCurrentlyChecked = current.includes(value);
-            
-            if (isCurrentlyChecked) {
-              // Uncheck main program and all its subprograms
-              const newValues = current.filter(v => v !== value && !subPrograms.includes(v));
-              return { ...prev, [category]: newValues };
-            } else {
-              // Check main program and all its subprograms
-              const newValues = [...current, value, ...subPrograms.filter(sp => !current.includes(sp))];
-              return { ...prev, [category]: newValues };
-            }
+          if (isCurrentlyChecked) {
+            // Uncheck main program and all its subprograms
+            const newValues = current.filter(v => v !== value && !subPrograms.includes(v));
+            return { ...prev, [category]: newValues };
           } else {
-            // Handle subprogram or regular item toggle
-            const newValues = current.includes(value)
-              ? current.filter(v => v !== value)
-              : [...current, value];
+            // Check main program and all its subprograms
+            const newValues = [...current, value, ...subPrograms.filter(sp => !current.includes(sp))];
             return { ...prev, [category]: newValues };
           }
-        });
-      };
-      function toggleList(program: string): void {
-        setDroppedPrograms(prev => ({
-          ...prev,
-          [program]: !prev[program]
-        }));
-      }
+        } else {
+          // Handle subprogram or regular item toggle
+          const newValues = current.includes(value)
+            ? current.filter(v => v !== value)
+            : [...current, value];
+          return { ...prev, [category]: newValues };
+        }
+      });
+    };
+    function toggleList(program: string): void {
+      setDroppedPrograms(prev => ({
+        ...prev,
+        [program]: !prev[program]
+      }));
+    }
+    
     return (
         <div style={{
                 width: "300px",
@@ -124,7 +135,7 @@ export default function Sidebar(props: SidebarProps){
                     flexDirection: 'column',
                     gap: '0.5rem'
                     }}>   
-                    {fullPrograms[program].map(subProgram => (
+                    {disciplineMapping[program].map(subProgram => (
                         <label 
                         key={subProgram} 
                         style={{

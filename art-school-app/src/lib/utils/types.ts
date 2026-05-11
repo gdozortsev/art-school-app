@@ -160,111 +160,15 @@ export const sample_programs = [
   // Add more programs here...
 ];
 
-export const fullPrograms: Record<string, string[]> = {
-  "Visual Arts":[
-    "Arts Industry",
-    "Art History",
-    "Museum Studies",
-    "Conservation",
-    "Art Education", 
-    "Art Therapy",
-    "Design",
-    "Graphic Design",
-    "UI / UX / Digital Design and Media",
-    "Animation",
-    "Photography",
-    "Painting",
-    "Drawing",
-    "Printmaking",
-    "Book Arts",
-    "Illustration",
-    "Medical/Scientific Illustration",
-    "Comics",
-    "Sculpture",
-    "Ceramics",
-    "Metals",
-    "Glass",
-    "Woodworking",
-    "Textiles / Fibers",
-    "Performance Arts",
-    "Interdisciplinary Arts"
-  ],
-  "Architecture and Design": [
-    "Architecture",
-    "Interior Design",
-    "Landscape Architecture",
-    "Architectural Studies / History",
-    "Industrial Design",
-    "Furniture Design",
-    "Global Environment Design",
-  ],
-  "Music": [
-    "Music Education",
-    "Musical Theater",
-    "Production / Technology",
-    "Performance",
-    "Industry",
-    "Composition / Music Theory",
-    "Music Therapy",
-    "Music Studies / History",
-    "Music Types (Jazz, Hip Hop, etc.)",
-    "Conducting"
-  ],
-  "Theater":[
-    "Acting",
-    "Design / Technology / Production",
-    "Management / Industry",
-    "Performance Art",
-    "Musical Theater",
-    "Theater Education",
-    "Theater Studies / History",
-    "Directing / Playwriting / Dramaturgy",
-    "Drama Therapy"
-  ],
-  "Dance": [
-    "Dance Education",
-    "Musical Theater",
-    "Performance Art",
-    "Dance Studies",
-    "Dance Science",
-    "Dance Types (Ballet, Modern, etc.)",
-    "Industry",
-    "Dance Therapy"
-  ],
-  "Film": [
-    "Production",
-    "Animation",
-    "Journalism / Broadcast / Communications",
-    "Industry",
-    "Film / Media Studies",
-    "Screenwriting",
-    "Direction",
-    "Acting",
-    "Documentary Filmaking / Studies"
-  ],
-  "Game and Media Arts": [
-    "Game Design",
-    "Game Development",
-    "Animation",
-    "Digital Design and Media",
-    "Industry"
-  ],
-  "Fashion": [
-    "Fasion Design",
-    "Fashion Business / Merchandising",
-    "Technical / Textiles / Accessories"
-  ]
-
-};
 export const programs = [
   "Visual Arts",
-    "Architecture and Design",
-    "Dance",
-    "Fashion",
-    "Film",
-    "Game and Media Arts",
-    "Music",
-    "Theater"
+  "Architecture and Design",
+  "Dance",
+  "Fashion",
+  "Film",
+  "Game and Media Arts",
+  "Music",
+  "Theater"
 ];
 // Filter categories
 // export const filterOptions = {

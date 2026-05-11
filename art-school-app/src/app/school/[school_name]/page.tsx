@@ -1,14 +1,20 @@
 "use client"
-import { getOneSchool, updateSchool } from "@/src/lib/schools/schools";
+import { getOneSchool } from "@/src/lib/schools/schools";
+import { getAllProgramsWithUmbrella } from "@/src/lib/programs/programs";
 import { use, useEffect, useState } from "react";
-import { SchoolWithPrograms, programs } from "@/src/lib/utils/types";
+import { programs } from "@/src/lib/utils/types";
+import { Program} from "@prisma/client"
+import Link from "next/link";
 
 export default function SchoolPage({ params }: { params: Promise<{ school_name: string }> }) {
   const { school_name } = use(params);
   const decodedName = decodeURIComponent(school_name);
   const [school, setSchool] = useState<any>(null);
+  const [openUmbrella, setOpenUmbrella] = useState<string | null>(null);
+  const [programsWithUmbrella, setProgramsWithUmbrella] = useState<Program[]>([]);
   
   useEffect(() => {
+    console.log("here")
     const load = async () => {
       const result = await getOneSchool({ school_name: decodedName });
       result? setSchool(result.school): null;
@@ -18,28 +24,34 @@ export default function SchoolPage({ params }: { params: Promise<{ school_name: 
 
   if (!school) return <div>Loading...</div>;
 
-  const getCoordinates = async () => {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(school.location)}&format=json&limit=1`,
-      { headers: { "User-Agent": "art-school-app" } }
-    );
-    const data = await response.json();
-    if (data.length > 0) {
-      const updatedSchool = {
-        ...school,
-        latitude: parseFloat(data[0].lat),
-        longitude: parseFloat(data[0].lon)
-      };
-      await updateSchool(updatedSchool);
-    } else {
-      console.log("No results found for", school.location);
+  const dropDown = async (umbrella: string) => {
+    // If the user clicks the same button again, close it
+    if (openUmbrella === umbrella) {
+        setOpenUmbrella(null);
+        return;
     }
-  };
+
+    try {
+        const response = await getAllProgramsWithUmbrella({
+            school: decodedName, 
+            umbrella: umbrella
+        });
+        console.log(response)
+        if (response && response.program){
+          setProgramsWithUmbrella(response.program); 
+          setOpenUmbrella(umbrella);
+        } else {
+          throw Error
+        }
+    } catch (error) {
+        console.error("Failed to fetch programs:", error);
+    }
+};
 
 
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", backgroundColor: "#8abbb4" }}>
-      <div style={{ fontFamily: "var(--font-sans)", width: "60%", height: "60vh", backgroundColor: "white", borderRadius: "12px", overflow: "hidden" }}>
+      <div style={{ fontFamily: "var(--font-sans)", width: "60%", height: "60vh", backgroundColor: "white", borderRadius: "12px"}}>
         
         {/* Header */}
         <div style={{ background: "#111", color: "white", textAlign: "center", padding: "2rem", borderRadius: "12px 12px 0 0" }}>
@@ -57,9 +69,83 @@ export default function SchoolPage({ params }: { params: Promise<{ school_name: 
         <div style={{ background: "white", padding: "2rem" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "3rem" }}>
             {programs.map(program => (
-              <button onClick = {getCoordinates} key={program} style={{ background: "#008488" , color: "white", border: "none", borderRadius: "8px", padding: ".75rem", fontSize: "17px", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                {program} Majors <span style={{ fontSize: "0.75rem", marginLeft: "3px" }}>▼</span>
-              </button>
+              <div key={program} style={{ position: "relative" }}>
+                <button 
+                  onClick={() => dropDown(program)} 
+                  style={{ 
+                    width: "100%",
+                    height: "100%",
+                    background: "#008488", 
+                    color: "white", 
+                    border: "none", 
+                    borderRadius: "8px", 
+                    padding: ".75rem", 
+                    fontSize: "17px", 
+                    fontWeight: 800, 
+                    cursor: "pointer", 
+                    display: "flex", 
+                    alignItems: "center", 
+                    justifyContent: "space-between" 
+                  }}
+                >
+                  {program} Majors 
+                  <span style={{ 
+                    fontSize: "0.75rem", 
+                    marginLeft: "3px",
+                    transform: openUmbrella === program ? "rotate(180deg)" : "none",
+                    transition: "transform 0.2s"
+                  }}>
+                    ▼
+                  </span>
+                </button>
+
+                {/* Dropdown Menu */}
+                {openUmbrella === program && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "110%",
+                      left: 0,
+                      width: "100%",
+                      background: "#8cbfc8",
+                      border: "1px solid #7ab0b9",
+                      borderRadius: "8px",
+                      boxShadow: "0px 4px 12px rgba(0,0,0,0.15)",
+                      zIndex: 10,
+                      maxHeight: "200px",
+                      overflowY: "auto",
+                    }}
+                  >
+                    {programsWithUmbrella.length > 0 ? (
+                      programsWithUmbrella.map((prg, idx) => (
+                        <Link
+                          href={prg.website!}
+                          key={idx}
+                          style={{
+                            display: "block",
+                            padding: "0.75rem 1rem",
+                            borderBottom: idx === programsWithUmbrella.length - 1 ? "none" : "1px solid rgba(255,255,255,0.3)",
+                            fontSize: "14px",
+                            color: "white",
+                            textDecoration: "none",
+                            fontWeight: 500,
+                            transition: "background 0.2s"
+                          }}
+                          // Optional: Add hover effect via a CSS class or inline logic
+                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.05)")}
+                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                        >
+                          {prg.degree}
+                        </Link>
+                      ))
+                    ) : (
+                      <div style={{ padding: "1rem", color: "white", textAlign: "center", fontSize: "14px" }}>
+                        None available
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
