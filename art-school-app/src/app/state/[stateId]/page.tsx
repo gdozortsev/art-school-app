@@ -20,6 +20,7 @@ export default function StatePage({ params }: { params: Promise<{ stateId: strin
     if (filters.searchText && !program.name.toLowerCase().includes(filters.searchText.toLowerCase())) return false;
     return true;
   });
+  
 
   return (
     <div style={{ display: "flex", height: "calc(100vh - 60px)" }}>

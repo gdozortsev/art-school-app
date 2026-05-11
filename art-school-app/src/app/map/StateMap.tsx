@@ -2,10 +2,11 @@
 import { useRef, useEffect, useState} from "react";
 import * as d3 from "d3";
 import { feature } from "topojson-client";
-import type { Program } from "../../lib/utils/types";
+import { stateNames, type Program } from "../../lib/utils/types";
 import SchoolPopup from "../../components/map/SchoolPopup";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { Feature, FeatureCollection, GeoJsonProperties } from "geojson";
+import { getStaticCities } from "@/src/lib/utils/cities";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
@@ -18,11 +19,27 @@ interface StateMapProps {
   setHoveredProgram: any;
 }
 
+interface CityCoord {
+  lng: number;
+  lat: number;
+  city: string;
+}
+
 export default function StateMap({ stateId, filteredPrograms, hoveredProgram, setHoveredProgram }: StateMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [stateFeature, setStateFeature] = useState<StateFeature | null>(null);
 
+  const [cityMappings, setCityMappings] = useState<CityCoord[]>([]);
+  
   useEffect(() => {
+    const fetchMapping = async () => {
+      const data = await getStaticCities(stateNames[stateId]);
+      if(data){
+        setCityMappings(data);
+      }
+    };
+    fetchMapping();
+    console.log(cityMappings)
     if (!svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
@@ -74,7 +91,6 @@ export default function StateMap({ stateId, filteredPrograms, hoveredProgram, se
       const x = (bounds[0][0] + bounds[1][0]) / 2;
       const y = (bounds[0][1] + bounds[1][1]) / 2;
       const scale = Math.min(8, 0.9 / Math.max(dx / width, dy / height));
-      console.log(scale)
       const translate = [width / 2 - scale * x, height / 2 - scale * y];
 
       // Apply zoom transform
@@ -87,12 +103,12 @@ export default function StateMap({ stateId, filteredPrograms, hoveredProgram, se
 
       // Add Google-style pin markers for art programs in this state
       const markers = g.selectAll(".marker")
-        .data(statePrograms)
+        .data(cityMappings)
         .enter()
         .append("g")
         .attr("class", "marker")
         .attr("transform", (d: any) => {
-          const coords = projection([d.longitude, d.latitude]);
+          const coords = projection([d.long, d.lat]);
           //THIS IS THE FIX FOR CONSTANTLY RELOADING!!
           d.x = coords ? coords[0] : -100
           d.y = coords ? coords[1] : -100
@@ -107,7 +123,7 @@ export default function StateMap({ stateId, filteredPrograms, hoveredProgram, se
           d3.select(this).select(".pin-body").attr("transform", "scale(1)");
           setHoveredProgram(null);
         });
-
+      
       // Draw pin shape (Google Maps style)
       markers.each(function() {
         const marker = d3.select(this);

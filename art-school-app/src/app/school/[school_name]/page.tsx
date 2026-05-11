@@ -14,7 +14,6 @@ export default function SchoolPage({ params }: { params: Promise<{ school_name: 
   const [programsWithUmbrella, setProgramsWithUmbrella] = useState<Program[]>([]);
   
   useEffect(() => {
-    console.log("here")
     const load = async () => {
       const result = await getOneSchool({ school_name: decodedName });
       result? setSchool(result.school): null;
@@ -36,7 +35,6 @@ export default function SchoolPage({ params }: { params: Promise<{ school_name: 
             school: decodedName, 
             umbrella: umbrella
         });
-        console.log(response)
         if (response && response.program){
           setProgramsWithUmbrella(response.program); 
           setOpenUmbrella(umbrella);
