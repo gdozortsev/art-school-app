@@ -1,19 +1,4 @@
 import { School, Program as P } from "@prisma/client"
-export interface Program{
-  id: number;
-  name: string;
-  city: string;
-  state: string;
-  latitude: number;
-  longitude: number;
-  programs: string[];  
-  type: string;        
-  enrollment: string;  
-  tuition: string;     
-  website: string;     
-  x?: number;           
-  y?: number;           
-}
 
 export type SchoolWithPrograms = School & {
     Program: P[]
@@ -41,7 +26,7 @@ export const stateNames: Record<string, string> = {
   "22": "Louisiana",
   "23": "Maine",
   "24": "Maryland",
-  "25": "Massachusetts",
+  "25": "Massacussetts",
   "26": "Michigan",
   "27": "Minnesota",
   "28": "Mississippi",

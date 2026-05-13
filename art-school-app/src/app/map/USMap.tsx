@@ -3,10 +3,10 @@ import { useRef, useEffect} from "react";
 import { useRouter } from "next/navigation";
 import * as d3 from "d3";
 import { feature } from "topojson-client";
-import type { Program } from "../../lib/utils/types";
 import SchoolPopup from "../../components/map/SchoolPopup";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { Feature, FeatureCollection, GeoJsonProperties } from "geojson";
+import { Program } from "@prisma/client";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
@@ -14,11 +14,11 @@ type StateFeature = Feature<any, GeoJsonProperties>;
 
 interface USMapProps {
   filteredPrograms: Program[];
-  hoveredProgram: Program | null;
-  setHoveredProgram: any;
+  hoveredPrograms: Program[] | null;
+  setHoveredPrograms: any;
 }
 
-export default function USMap({ filteredPrograms, hoveredProgram, setHoveredProgram }: USMapProps) {
+export default function USMap({ filteredPrograms, hoveredPrograms, setHoveredPrograms }: USMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const router = useRouter();
 
@@ -61,7 +61,7 @@ export default function USMap({ filteredPrograms, hoveredProgram, setHoveredProg
         .style("cursor", "pointer")
         .on("click", function(event: MouseEvent, d: StateFeature) {
           const clickedState = d3.select(this);
-          
+
           g.selectAll("path")
             .transition()
             .duration(300)
@@ -96,60 +96,15 @@ export default function USMap({ filteredPrograms, hoveredProgram, setHoveredProg
           d3.select(this).attr("fill", "#AABCF0");
         });
 
-      // Add Google-style pin markers for art programs
-      const markers = g.selectAll(".marker")
-        .data(filteredPrograms)
-        .enter()
-        .append("g")
-        .attr("class", "marker")
-        .attr("transform", (d: any) => {
-          const coords = projection([d.longitude, d.latitude]);
-          //THIS IS THE FIX FOR CONSTANTLY RELOADING!!
-          d.x = coords ? coords[0] : -100
-          d.y = coords ? coords[1] : -100
-          return coords ? `translate(${coords[0]},${coords[1]})` : `translate(-100,-100)`;
-        })
-        .style("cursor", "pointer")
-        .on("mouseenter", function(event: MouseEvent, d: any) {
-          d3.select(this).select(".pin-body").attr("transform", "scale(1.2)");
-          setHoveredProgram(d)
-        })
-        .on("mouseleave", function() {
-          d3.select(this).select(".pin-body").attr("transform", "scale(1)");
-          setHoveredProgram(null);
-        });
-
-      // Draw pin shape (Google Maps style)
-      markers.each(function() {
-        const marker = d3.select(this);
-        
-        const pinGroup = marker.append("g")
-          .attr("class", "pin-body");
-        
-        // Pin body (teardrop shape)
-        pinGroup.append("path")
-          .attr("d", "M 0,-30 C -8,-30 -15,-23 -15,-15 C -15,-8 0,0 0,0 C 0,0 15,-8 15,-15 C 15,-23 8,-30 0,-30 Z")
-          .attr("fill", "#EA4335")
-          .attr("stroke", "#fff")
-          .attr("stroke-width", 2);
-        
-        // Inner circle
-        pinGroup.append("circle")
-          .attr("cx", 0)
-          .attr("cy", -15)
-          .attr("r", 6)
-          .attr("fill", "#fff");
-      });
-
     });
-  }, [router, filteredPrograms, setHoveredProgram]);
+  }, [router, filteredPrograms, setHoveredPrograms]);
 
   return (
     <>
       <svg ref={svgRef} width='100%' height='100%' />
-      
+
       {/* Tooltip with tail */}
-      {hoveredProgram && <SchoolPopup hoveredProgram={hoveredProgram} />}
+      {/* {hoveredProgram && <SchoolPopup hoveredProgram={hoveredProgram} />} */}
     </>
   );
 }

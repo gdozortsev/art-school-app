@@ -161,9 +161,9 @@ export default function Sidebar(props: SidebarProps){
             </div>
         </div>
 
-        <div style={{ fontSize: "0.85rem", color: "#ecececff", marginTop: "1rem" }}>
+        {/* <div style={{ fontSize: "0.85rem", color: "#ecececff", marginTop: "1rem" }}>
             Showing {filteredPrograms.length} of {sample_programs.length} programs
-        </div>
+        </div> */}
         </div>
     );
 }

@@ -2,11 +2,15 @@
 import { useRef, useEffect, useState} from "react";
 import * as d3 from "d3";
 import { feature } from "topojson-client";
-import { stateNames, type Program } from "../../lib/utils/types";
+import { stateNames} from "../../lib/utils/types";
 import SchoolPopup from "../../components/map/SchoolPopup";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { Feature, FeatureCollection, GeoJsonProperties } from "geojson";
 import { getStaticCities } from "@/src/lib/utils/cities";
+import { Program } from "@prisma/client";
+import pin from "../../assets/pin.svg"
+//"/Users/gdozorts/Downloads/art-school-app/art-school-app/src/app/map/StateMap.tsx"
+
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
@@ -15,32 +19,41 @@ type StateFeature = Feature<any, GeoJsonProperties>;
 interface StateMapProps {
   stateId: string;
   filteredPrograms: any;
-  hoveredProgram: Program | null;
-  setHoveredProgram: any;
+  hoveredPrograms: Program[] | null;
+  setHoveredPrograms: any;
 }
 
 interface CityCoord {
   lng: number;
   lat: number;
   city: string;
+  Program: Program[];
 }
 
-export default function StateMap({ stateId, filteredPrograms, hoveredProgram, setHoveredProgram }: StateMapProps) {
+interface ProjectedCoords {
+  x: number;
+  y: number;
+  scale: number
+}
+
+export default function StateMap({ stateId, filteredPrograms, hoveredPrograms, setHoveredPrograms }: StateMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [stateFeature, setStateFeature] = useState<StateFeature | null>(null);
 
   const [cityMappings, setCityMappings] = useState<CityCoord[]>([]);
-  
+  const [projected_coords, setProjectedCoords] = useState<ProjectedCoords | null>(null);
   useEffect(() => {
     const fetchMapping = async () => {
-      const data = await getStaticCities(stateNames[stateId]);
-      if(data){
-        setCityMappings(data);
-      }
-    };
+        const data = await getStaticCities(stateNames[stateId]);
+        if(data){
+          setCityMappings(data);
+        }
+      };
     fetchMapping();
-    console.log(cityMappings)
+  }, [stateId])
+  useEffect(() => {
     if (!svgRef.current) return;
+    if (cityMappings.length === 0) return;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
@@ -55,7 +68,7 @@ export default function StateMap({ stateId, filteredPrograms, hoveredProgram, se
         topology,
         topology.objects.states as GeometryCollection
       ).features as StateFeature[];
-      
+
       const state = states.find((s) => String(s.id) === String(stateId));
 
       if (!state) return;
@@ -90,14 +103,14 @@ export default function StateMap({ stateId, filteredPrograms, hoveredProgram, se
       const dy = bounds[1][1] - bounds[0][1];
       const x = (bounds[0][0] + bounds[1][0]) / 2;
       const y = (bounds[0][1] + bounds[1][1]) / 2;
-      const scale = Math.min(8, 0.9 / Math.max(dx / width, dy / height));
+      const scale = Math.min(32, 0.9 / Math.max(dx / width, dy / height));
       const translate = [width / 2 - scale * x, height / 2 - scale * y];
 
       // Apply zoom transform
       g.attr("transform", `translate(${translate})scale(${scale})`);
 
       // Filter programs for this state
-      const statePrograms = filteredPrograms.filter((program: any) => 
+      const statePrograms = filteredPrograms.filter((program: any) =>
         String(program.stateId) === String(stateId)
       );
 
@@ -108,55 +121,82 @@ export default function StateMap({ stateId, filteredPrograms, hoveredProgram, se
         .append("g")
         .attr("class", "marker")
         .attr("transform", (d: any) => {
-          const coords = projection([d.long, d.lat]);
-          //THIS IS THE FIX FOR CONSTANTLY RELOADING!!
+          const coords = projection([d.lng, d.lat]);
+          //THIS IS THE FIX FOR CONSTANTLY RELOADING!! DO NOT DELETE
           d.x = coords ? coords[0] : -100
           d.y = coords ? coords[1] : -100
           return coords ? `translate(${coords[0]},${coords[1]})` : `translate(-100,-100)`;
-        }) 
+        })
         .style("cursor", "pointer")
         .on("mouseenter", function(event: MouseEvent, d: any) {
-          d3.select(this).select(".pin-body").attr("transform", "scale(1.2)");
-          setHoveredProgram(d)
+          const svgEl = svgRef.current;
+          if (!svgEl) return;
+          const rect = svgEl.getBoundingClientRect();
+
+          // Apply the same zoom transform that g has, then map to screen coords
+          const screenX = (d.x * scale + translate[0]) / 1200 * rect.width + rect.left;
+          const screenY = (d.y * scale + translate[1]) / 750 * rect.height + rect.top;
+
+          d3.select(this).select(".pin-body").attr("transform", `scale(${1.4 / scale})`);
+          setHoveredPrograms(d.Program);
+          setProjectedCoords({ x: screenX, y: screenY, scale: scale });
         })
         .on("mouseleave", function() {
-          d3.select(this).select(".pin-body").attr("transform", "scale(1)");
-          setHoveredProgram(null);
+          d3.select(this).select(".pin-body").attr("transform", `scale(${1.5/scale})`);
+          setHoveredPrograms(null);
         });
-      
+
       // Draw pin shape (Google Maps style)
       markers.each(function() {
         const marker = d3.select(this);
-        
+
         const pinGroup = marker.append("g")
-          .attr("class", "pin-body");
-        
-        // Pin body (teardrop shape)
-        pinGroup.append("path")
-          .attr("d", "M 0,-30 C -8,-30 -15,-23 -15,-15 C -15,-8 0,0 0,0 C 0,0 15,-8 15,-15 C 15,-23 8,-30 0,-30 Z")
-          .attr("fill", "#EA4335")
+          .attr("class", "pin-body")
+          .attr("transform", `scale(${1.5/scale})`);
+        pinGroup.append("text")
+          .attr("x", 0)
+          .attr("y", 10) 
+          .attr("text-anchor", "middle")
+          .attr("font-size", "10px")
+          .attr("font-weight", "bold")
+          .attr("fill", "#333")
           .attr("stroke", "#fff")
-          .attr("stroke-width", 2);
-        
-        // Inner circle
-        pinGroup.append("circle")
-          .attr("cx", 0)
-          .attr("cy", -15)
-          .attr("r", 6)
-          .attr("fill", "#fff");
+          .attr("stroke-width", "2px")
+          .attr("paint-order", "stroke")  // stroke behind text for readability
+          .text((d: any) => d.city);
+
+        pinGroup.append("image")
+          .attr("href", pin.src)
+          .attr("width", 20)
+          .attr("height", 20)
+          .attr("x", -10)
+          .attr("y", -20);
+        // Pin body (teardrop shape)
+        // pinGroup.append("path")
+        //   .attr("d", "M 0,-30 C -8,-30 -15,-23 -15,-15 C -15,-8 0,0 0,0 C 0,0 15,-8 15,-15 C 15,-23 8,-30 0,-30 Z")
+        //   .attr("fill", "#EA4335")
+        //   .attr("stroke", "#fff")
+        //   .attr("stroke-width", 2);
+
+        // // Inner circle
+        // pinGroup.append("circle")
+        //   .attr("cx", 0)
+        //   .attr("cy", -15)
+        //   .attr("r", 6)
+        //   .attr("fill", "#fff");
       });
 
     });
-  }, [stateId, filteredPrograms, setHoveredProgram]);
+  }, [stateId, cityMappings, filteredPrograms, setHoveredPrograms]);
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <svg ref={svgRef} width="100%" height="100%" style={{ marginTop: 0 }} />
-      
-      <div style={{ 
-        position: "absolute", 
-        bottom: "1rem", 
-        left: "1rem" 
+
+      <div style={{
+        position: "absolute",
+        bottom: "1rem",
+        left: "1rem"
       }}>
         <a href="/" style={{
           color: "#4a90e2",
@@ -171,7 +211,12 @@ export default function StateMap({ stateId, filteredPrograms, hoveredProgram, se
         </a>
       </div>
 
-      {hoveredProgram && <SchoolPopup hoveredProgram={hoveredProgram} />}
+      {hoveredPrograms &&
+      <SchoolPopup
+        hoveredPrograms={hoveredPrograms}
+        projected_coords = {projected_coords!}
+        onClose = {() => setHoveredPrograms(null)}
+      />}
     </div>
   );
 }
