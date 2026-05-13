@@ -56,7 +56,7 @@ export const stateNames: Record<string, string> = {
   "54": "West Virginia",
   "55": "Wisconsin",
   "56": "Wyoming",
-  "72": "Puerto Rico"
+  "57": "Washington DC"
 };
 
 export function getStateName(id: number | string | undefined) {

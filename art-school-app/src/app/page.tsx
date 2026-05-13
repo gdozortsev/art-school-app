@@ -1,8 +1,9 @@
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "./map/Sidebar";
 import USMap from "./map/USMap";
-import { Program } from "@prisma/client";
+import { SchoolWithPrograms } from "../lib/utils/types";
+import { getStaticAllSchools } from "../lib/utils/schools";
 
 interface Filters {
   programs: string[];
@@ -11,20 +12,35 @@ interface Filters {
 
 export default function Home() {
   const [filters, setFilters] = useState<Filters>({ programs: [], searchText: "" });
-  const [hoveredPrograms, setHoveredPrograms] = useState<Program[] | null>(null);
+  const [allSchools, setAllSchools] = useState<SchoolWithPrograms[] | null>(null);
 
-  // const filteredPrograms: Program[] = sample_programs.filter(program => {
-  //   if (filters.programs.length > 0 && !filters.programs.some(p => program.programs.includes(p))) return false;
-  //   if (filters.searchText && !program.name.toLowerCase().includes(filters.searchText.toLowerCase())) return false;
-  //   return true;
-  // });
-  const filteredPrograms: Program[] = []
+  useEffect(() => {
+      const fetchSchools = async () => {
+          const data = await getStaticAllSchools();
+          if(data){
+            setAllSchools(data);
+          }
+        };
+      fetchSchools();
+
+    }, [])
+
+    const filteredSchools: SchoolWithPrograms[] = (allSchools || []).filter(school => {
+        // if (filters.programs.length > 0 && !filters.programs.some(p => school.Program.includes(p))) return false;
+        if (filters.searchText && !school.school_name.toLowerCase().includes(filters.searchText.toLowerCase())) return false;
+        return true;
+    });
+
+    console.log("the filteredPrograms", filteredSchools.length)
+    if (!allSchools) {
+      return <div>Loading...</div>;
+    }
 
   return (
     <div style={{ display: "flex", height: "calc(100vh - 60px)" }}>
-      <Sidebar filters={filters} setFilters={setFilters} filteredPrograms={filteredPrograms} />
+      <Sidebar filters={filters} setFilters={setFilters} filteredPrograms={filteredSchools} />
       <div style={{ flex: 1, textAlign: "center", position: "relative" }}>
-        <USMap filteredPrograms={filteredPrograms} hoveredPrograms={hoveredPrograms} setHoveredPrograms={setHoveredPrograms} />
+        <USMap filteredSchools={filteredSchools}/>
       </div>
     </div>
   );

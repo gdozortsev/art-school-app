@@ -1,60 +1,81 @@
+"use client"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-export default function NavBar({ currentPath = "/" }) {
+export default function NavBar({}) {
+  const pathname = usePathname(); // This hook automatically detects the current URL
+
+  const linkStyle = (path: string) => {
+    // Check if the current URL matches the link path
+    const isActive = pathname === path;
+
+    return {
+      color: "white",
+      textDecoration: "none",
+      fontSize: "1.1rem",
+      fontWeight: isActive ? "600" : "400",
+      opacity: isActive ? 1 : 0.8,
+      transition: "all 0.2s ease",
+      padding: "0.5rem 0.8rem",
+      borderRadius: "6px",
+      display: "flex",
+      alignItems: "center",
+      // Active background highlight
+      backgroundColor: isActive ? "rgba(255, 255, 255, 0.2)" : "transparent",
+    };
+  };
+
   return (
     <nav style={{
       backgroundColor: "#008488",
-      padding: "1rem 2rem",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+      height: "60px", // Fixed height to match your main container's calc
+      padding: "0 2rem",
+      display: "flex",
+      alignItems: "center",
+      borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+      zIndex: 100,
+      boxSizing: "border-box",
+      fontFamily: "Inter, system-ui, sans-serif"
     }}>
       <div style={{
-        margin: "0 auto",
+        width: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between"
       }}>
-        <div style = {{display: "flex", gap: "2rem", alignItems: "center", whiteSpace: "nowrap"}}>
-            <a 
-            href="/" 
-            style={{
-              color: "#fffafaff",
-              textDecoration: "none",
-              fontSize: "1.5rem",
-              fontWeight: "bold",
-              flex: 1
-            }}
-          >
+
+        {/* Left Side: Brand/Main Links */}
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          <Link href="/" style={linkStyle("/")}>
             Home
-          </a>
-          <a 
-            href="/all" 
-            style={{
-              color: "#fffafaff",
-              textDecoration: "none",
-              fontSize: "1.5rem",
-              fontWeight: "bold",
-              flex: 1
-            }}
-          >
+          </Link>
+
+          <Link href="/all" style={linkStyle("/all")}>
             All Schools
-          </a>
+          </Link>
         </div>
-       
-        
-        <div style={{ display: "flex", gap: "2rem" }}>
-          <a
+
+        {/* Right Side: Secondary Links */}
+        <div style={{ display: "flex", gap: "1rem" }}>
+          <Link
             href="/contacts"
             style={{
-              color: currentPath === "/" ? "#fffcfcff" : "white",
-              textDecoration: "none",
-              fontSize: "1.5rem",
-              fontWeight: currentPath === "/" ? "600" : "400",
-              transition: "color 0.3s"
+              ...linkStyle("/contacts"),
+              border: "1px solid rgba(255, 255, 255, 0.3)", // Highlight contact
             }}
           >
             Contact
-          </a>
+          </Link>
         </div>
       </div>
+
+      <style jsx>{`
+        a:hover {
+          opacity: 1 !important;
+          background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+      `}</style>
     </nav>
   );
 }

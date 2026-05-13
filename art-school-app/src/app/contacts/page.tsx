@@ -1,58 +1,100 @@
 "use client";
+import Link from "next/link";
+
 export default function Contacts() {
-  
   return (
     <div style={{
-      textAlign: "center",
-      padding: "2rem",
-      maxWidth: "800px",
-      margin: "0 auto"
+      minHeight: "calc(100vh - 60px)",
+      backgroundColor: "rgba(0, 132, 136, 0.15)",
+      padding: "4rem 2rem",
+      fontFamily: "Inter, system-ui, sans-serif"
     }}>
-      <h1>Contact Us</h1>
-      
       <div style={{
-        backgroundColor: "white",
-        padding: "2rem",
-        borderRadius: "8px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        marginTop: "2rem",
-        textAlign: "left"
+        maxWidth: "600px",
+        margin: "0 auto",
+        textAlign: "center"
       }}>
-        <h2>Get in Touch</h2>
-        <p>Did Dina fuck up? Do you hate how Gaby made this app? We'd love to hear from you!</p>
         
-        <div style={{ marginTop: "2rem" }}>
-          <h3>Email</h3>
-          <p>
-            <a href="dinaleahkats@gmail.com" style={{ color: "#4a90e2", textDecoration: "none" }}>
-              dinaleahkats@gmail.com
-            </a>
-          </p>
-        </div>
-
-        <div style={{ marginTop: "2rem" }}>
-          <h3>Phone</h3>
-          <p>617-YOUR-MOM</p>
-        </div>
-
-        <div style={{ marginTop: "2rem" }}>
-          <h3>Address</h3>
-          <p>
-            YOUR MOMS HOUSE<br />
-            YOUR MOM, MA 12345<br />
-            United States
-          </p>
-        </div>
-      </div>
-
-      <div style={{ marginTop: "2rem" }}>
-        <a href="/" style={{
-          color: "#4a90e2",
-          textDecoration: "none",
-          fontSize: "1rem"
+        {/* Header Section */}
+        <h1 style={{ 
+          fontSize: "2.5rem", 
+          color: "#004d4f", 
+          marginBottom: "1rem",
+          fontWeight: "800" 
         }}>
-          ← Back to Map
-        </a>
+          Contact Us
+        </h1>
+        <p style={{ color: "#666", fontSize: "1.1rem", marginBottom: "3rem" }}>
+          Have questions about the map or specific programs? We're here to help.
+        </p>
+
+        {/* Contact Card */}
+        <div style={{
+          backgroundColor: "white",
+          padding: "3rem 2rem",
+          borderRadius: "16px",
+          boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
+          textAlign: "center",
+          marginBottom: "3rem",
+          border: "1px solid rgba(0, 132, 136, 0.1)"
+        }}>
+          <div style={{ 
+            backgroundColor: "rgba(0, 132, 136, 0.1)", 
+            width: "60px", 
+            height: "60px", 
+            borderRadius: "50%", 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "center", 
+            margin: "0 auto 1.5rem"
+          }}>
+            <span style={{ fontSize: "1.5rem" }}>✉️</span>
+          </div>
+          
+          <h2 style={{ color: "#004d4f", marginBottom: "0.5rem" }}>Email Us</h2>
+          
+          <a 
+            href="mailto:dinaleahkats@gmail.com" 
+            style={{ 
+              color: "#008488", 
+              textDecoration: "none", 
+              fontSize: "1.2rem", 
+              fontWeight: "600",
+              transition: "opacity 0.2s"
+            }}
+            onMouseOver={(e) => e.currentTarget.style.opacity = "0.7"}
+            onMouseOut={(e) => e.currentTarget.style.opacity = "1"}
+          >
+            dinaleahkats@gmail.com
+          </a>
+        </div>
+
+        {/* Navigation Section */}
+        <div style={{ marginTop: "2rem" }}>
+          <Link href="/" style={{
+            backgroundColor: "#008488",
+            color: "white",
+            textDecoration: "none",
+            padding: "0.75rem 2rem",
+            borderRadius: "8px",
+            fontSize: "1rem",
+            fontWeight: 500,
+            display: "inline-block",
+            transition: "transform 0.2s, background-color 0.2s",
+            boxShadow: "0 4px 12px rgba(0, 132, 136, 0.2)"
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.backgroundColor = "#006d71";
+            e.currentTarget.style.transform = "translateY(-2px)";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.backgroundColor = "#008488";
+            e.currentTarget.style.transform = "translateY(0)";
+          }}
+          >
+            ← Back to Map
+          </Link>
+        </div>
       </div>
     </div>
   );

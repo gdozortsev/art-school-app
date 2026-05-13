@@ -147,43 +147,48 @@ export default function StateMap({ stateId, filteredPrograms, hoveredPrograms, s
         });
 
       // Draw pin shape (Google Maps style)
-      markers.each(function() {
+      markers.each(function(d) {
         const marker = d3.select(this);
 
         const pinGroup = marker.append("g")
-          .attr("class", "pin-body")
-          .attr("transform", `scale(${1.5/scale})`);
-        pinGroup.append("text")
-          .attr("x", 0)
-          .attr("y", 10) 
-          .attr("text-anchor", "middle")
-          .attr("font-size", "10px")
-          .attr("font-weight", "bold")
-          .attr("fill", "#333")
-          .attr("stroke", "#fff")
-          .attr("stroke-width", "2px")
-          .attr("paint-order", "stroke")  // stroke behind text for readability
-          .text((d: any) => d.city);
+          .attr("class", "pin-container")
+          // Use a slightly smoother transition for the scale
+          .attr("transform", `scale(${1.2 / scale})`);
+
+        // 1. The Pin (Shadow/Glow effect)
+        // Adding a subtle circle behind the pin makes it pop without looking "busy"
+        pinGroup.append("circle")
+          .attr("r", 12)
+          .attr("fill", "rgba(0, 132, 136, 0.15)") // Your teal, but very light
+          .attr("cy", -10);
 
         pinGroup.append("image")
           .attr("href", pin.src)
-          .attr("width", 20)
-          .attr("height", 20)
-          .attr("x", -10)
-          .attr("y", -20);
-        // Pin body (teardrop shape)
-        // pinGroup.append("path")
-        //   .attr("d", "M 0,-30 C -8,-30 -15,-23 -15,-15 C -15,-8 0,0 0,0 C 0,0 15,-8 15,-15 C 15,-23 8,-30 0,-30 Z")
-        //   .attr("fill", "#EA4335")
-        //   .attr("stroke", "#fff")
-        //   .attr("stroke-width", 2);
+          .attr("width", 22)
+          .attr("height", 22)
+          .attr("x", -11)
+          .attr("y", -22)
+          .style("filter", "drop-shadow(0px 2px 2px rgba(0,0,0,0.2))");
 
-        // // Inner circle
-        // pinGroup.append("circle")
-        //   .attr("cx", 0)
-        //   .attr("cy", -15)
-        //   .attr("r", 6)
-        //   .attr("fill", "#fff");
+        pinGroup.insert("rect", "text")
+          .attr("x", (d: any) => -(d.city.length * 3) - 6) // Dynamic width based on city name
+          .attr("y", 6)
+          .attr("width", (d: any) => (d.city.length * 6) + 12)
+          .attr("height", 14)
+          .attr("rx", 7) // Rounded corners
+          .attr("fill", "rgba(255, 255, 255, 0.9)")
+          .style("filter", "drop-shadow(0px 1px 2px rgba(0,0,0,0.1))");
+
+        // 2. Append the text on top
+        pinGroup.append("text")
+          .attr("x", 0)
+          .attr("y", 16)
+          .attr("text-anchor", "middle")
+          .style("font-size", "9px")
+          .style("font-weight", "600")
+          .style("fill", "#000000") // Use your teal color for the text
+          .style("text-transform", "uppercase")
+          .text((d: any) => d.city);
       });
 
     });
