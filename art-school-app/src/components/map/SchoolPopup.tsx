@@ -1,5 +1,6 @@
 import { Program } from "@prisma/client";
 import Link from "next/link";
+import { useState } from "react";
 
 interface SchoolPopupProps {
     hoveredPrograms: Program[];
@@ -13,6 +14,11 @@ interface ProjectedCoords {
 }
 
 const SchoolPopup = ({ hoveredPrograms, projected_coords, onClose}: SchoolPopupProps) => {
+    const organized = hoveredPrograms.reduce((acc, program) => {
+      if (!acc[program.school_name]) acc[program.school_name] = [];
+      acc[program.school_name].push(program.discipline);
+      return acc;
+    }, {} as Record<string, string[]>);
     if (!hoveredPrograms.length) return null;
 
     const first = hoveredPrograms[0];
@@ -74,9 +80,9 @@ const SchoolPopup = ({ hoveredPrograms, projected_coords, onClose}: SchoolPopupP
 
                 {/* Scrollable list */}
                 <div style={{ maxHeight: "200px", overflowY: "auto", padding: "0.5rem" }}>
-                    {hoveredPrograms.map((program, i) => (
+                    {Object.entries(organized).map(([school_name, disciplines], i) => (
                         <Link
-                            href={`/school/${program.school_name}`}
+                            href={`/school/${school_name}`}
                             key={i}
                             style={{
                                 display: "block",
@@ -90,10 +96,10 @@ const SchoolPopup = ({ hoveredPrograms, projected_coords, onClose}: SchoolPopupP
                             onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                         >
                             <p style={{ margin: "0 0 0.2rem 0", fontSize: "0.9rem", color: "#333", fontWeight: "600" }}>
-                                {program.school_name}
+                                {school_name}
                             </p>
                             <p style={{ margin: 0, fontSize: "0.8rem", color: "#888" }}>
-                                {program.degree}
+                                {disciplines.join(", ")}
                             </p>
                         </Link>
                     ))}

@@ -6,7 +6,7 @@ import { SchoolWithPrograms } from "../lib/utils/types";
 import { getStaticAllSchools } from "../lib/utils/schools";
 
 interface Filters {
-  programs: string[];
+  programs: string[]; //all of the selected disciplines (in Program, stored as Program.umbrella_discipline & Program.discipline)
   searchText: string;
 }
 
@@ -26,7 +26,7 @@ export default function Home() {
     }, [])
 
     const filteredSchools: SchoolWithPrograms[] = (allSchools || []).filter(school => {
-        // if (filters.programs.length > 0 && !filters.programs.some(p => school.Program.includes(p))) return false;
+        if (filters.programs.length > 0 && !filters.programs.some(p => school.Program.some((d: any) => d.discipline.includes(p)))) return false;
         if (filters.searchText && !school.school_name.toLowerCase().includes(filters.searchText.toLowerCase())) return false;
         return true;
     });

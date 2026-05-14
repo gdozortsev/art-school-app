@@ -185,14 +185,15 @@ export default function Sidebar({ filters, setFilters, filteredPrograms }: Sideb
       </div>
 
       {/* Footer Stats Card */}
-      <div style={{
+      <div style={{ 
         marginTop: "1rem",
         padding: "1rem",
         backgroundColor: "rgba(0, 0, 0, 0.1)",
         borderRadius: "12px",
         textAlign: "center"
       }}>
-        <div style={{ fontSize: "0.7rem", opacity: 0.9, textTransform: "uppercase" }}>Showing {filteredPrograms.length} of {filteredPrograms.length} Programs</div>
+        <div style={{ fontSize: "1.2rem", fontWeight: "bold" }}>{filteredPrograms.length}</div>
+        <div style={{ fontSize: "0.7rem", opacity: 0.8, textTransform: "uppercase" }}>Schools Found</div>
       </div>
 
       <style jsx>{`

@@ -42,6 +42,7 @@ export default function StateMap({ stateId, filteredPrograms, hoveredPrograms, s
 
   const [cityMappings, setCityMappings] = useState<CityCoord[]>([]);
   const [projected_coords, setProjectedCoords] = useState<ProjectedCoords | null>(null);
+
   useEffect(() => {
     const fetchMapping = async () => {
         const data = await getStaticCities(stateNames[stateId]);
