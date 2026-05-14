@@ -1,60 +1,59 @@
-"use client"
-import { useEffect, useState } from "react";
-import Sidebar from "./map/Sidebar";
-import USMap from "./map/USMap";
-import { SchoolWithPrograms } from "../lib/utils/types";
-import { getStaticAllSchools } from "../lib/utils/schools";
+import Image from 'next/image'
+import Link from 'next/link'
+import landing from '../assets/landing.png'
 
-interface Filters {
-  programs: string[]; //all of the selected disciplines (in Program, stored as Program.umbrella_discipline & Program.discipline)
-  searchText: string;
-}
-
-export default function Home() {
-  const [filters, setFilters] = useState<Filters>({ programs: [], searchText: "" });
-  const [allSchools, setAllSchools] = useState<SchoolWithPrograms[] | null>(null);
-
-  useEffect(() => {
-      const fetchSchools = async () => {
-          const data = await getStaticAllSchools();
-          if(data){
-            setAllSchools(data);
-          }
-        };
-      fetchSchools();
-
-    }, [])
-
-    const filteredSchools: SchoolWithPrograms[] = (allSchools || []).filter(school => {
-      if (filters.programs.length > 0) {
-          const matchesCheckboxes = filters.programs.some(p =>
-              school.Program.some((prg: any) => prg.discipline.includes(p))
-          );
-          if (!matchesCheckboxes) return false;
-      }
-
-      if (filters.searchText) {
-          const searchLower = filters.searchText.toLowerCase();
-          const matchesSearch = school.Program.some((prg: any) =>
-              prg.discipline.toLowerCase().includes(searchLower) ||
-              prg.degree?.toLowerCase().includes(searchLower)
-          );
-          if (!matchesSearch) return false;
-      }
-
-      return true;
-    });
-
-    if (!allSchools) {
-      return <div>Loading...</div>;
-    }
-
+export default function Landing() {
   return (
-    <div style={{ display: "flex", height: "calc(100vh - 60px)" }}>
-      <Sidebar filters={filters} setFilters={setFilters} filteredPrograms={filteredSchools} />
-      <div style={{ flex: 1, textAlign: "center", position: "relative" }}>
-        <USMap filteredSchools={filteredSchools}/>
-      </div>
+    <div style={{ position: "relative", width: "100%" }}>
+      <Image src={landing} alt="Landing" style={{ width: "100%", height: "auto", display: "block" }} />
+
+      {/* Map button - centered */}
+      <Link href="/map" style={{
+        position: "absolute",
+        top: "44%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "18%",
+        height: "14%",
+        borderRadius: "999px",
+        display: "block",
+      }} />
+
+      {/* List of schools */}
+      <Link href="/all" style={{
+        position: "absolute",
+        top: "72%",
+        left: "27%",
+        transform: "translate(-50%, -50%)",
+        width: "16%",
+        height: "14%",
+        borderRadius: "999px",
+        display: "block",
+      }} />
+
+      {/* Steps and tips */}
+      <Link href="/apply" style={{
+        position: "absolute",
+        top: "72%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "16%",
+        height: "14%",
+        borderRadius: "999px",
+        display: "block",
+      }} />
+
+      {/* Careers in the arts */}
+      <Link href="/careers" style={{
+        position: "absolute",
+        top: "72%",
+        left: "73%",
+        transform: "translate(-50%, -50%)",
+        width: "16%",
+        height: "14%",
+        borderRadius: "999px",
+        display: "block",
+      }} />
     </div>
-  );
+  )
 }

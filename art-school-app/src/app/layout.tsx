@@ -1,4 +1,4 @@
-import NavBar from "./NavBar";
+import NavBarWrapper from "./NavBarWrapper";
 import "./globals.css";
 
 
@@ -10,7 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NavBar />
+        <NavBarWrapper />
         {children}
       </body>
     </html>

@@ -47,7 +47,7 @@ export default function NavBar({}) {
 
         {/* Left Side: Brand/Main Links */}
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          <Link href="/" style={linkStyle("/")}>
+          <Link href="/map" style={linkStyle("/map")}>
             Home
           </Link>
 
