@@ -71,7 +71,7 @@ export default function Contacts() {
 
         {/* Navigation Section */}
         <div style={{ marginTop: "2rem" }}>
-          <Link href="/" style={{
+          <Link href="/map" style={{
             backgroundColor: "#008488",
             color: "white",
             textDecoration: "none",

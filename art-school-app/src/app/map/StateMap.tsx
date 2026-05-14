@@ -252,7 +252,7 @@ export default function StateMap({ stateId, filteredPrograms, hoveredPrograms, s
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <svg ref={svgRef} width="100%" height="100%" style={{ marginTop: 0 }} />
       <div style={{ position: "absolute", bottom: "1rem", left: "1rem" }}>
-        <a href="/" style={{
+        <a href="/map" style={{
           color: "#4a90e2",
           textDecoration: "none",
           fontSize: "1rem",

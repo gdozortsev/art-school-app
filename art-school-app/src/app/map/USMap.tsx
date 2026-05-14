@@ -99,6 +99,7 @@ export default function USMap({ filteredSchools}: USMapProps) {
           .enter()
           .append("g")
           .attr("class", "marker")
+          .style("pointer-events", "none")
           .attr("transform", (d: any) => {
             const coords = projection([d.longitude, d.latitude]);
             //THIS IS THE FIX FOR CONSTANTLY RELOADING!!
@@ -111,7 +112,9 @@ export default function USMap({ filteredSchools}: USMapProps) {
           const marker = d3.select(this);
 
           const pinGroup = marker.append("g")
-            .attr("class", "pin-body");
+            .attr("class", "pin-body")
+            .style("pointer-events", "none");
+
 
           pinGroup.append("text")
             .attr("x", 0)
@@ -129,6 +132,48 @@ export default function USMap({ filteredSchools}: USMapProps) {
   return (
     <>
       <svg ref={svgRef} width='100%' height='100%' />
+
+      <div style={{
+        position: "absolute",
+        top: "1.5rem",
+        left: "85%",
+        transform: "translateX(-50%)",
+
+        // Glassmorphism effect
+        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        backdropFilter: "blur(8px)",
+
+        // Branding colors
+        border: "1px solid rgba(0, 132, 136, 0.2)",
+        color: "#006d71", // Deeper teal for text
+
+        padding: "0.5rem 1rem",
+        borderRadius: "12px", // Matching your school card radius
+        boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
+
+        fontSize: "1rem",
+        fontWeight: 600,
+        letterSpacing: "0.01em",
+        pointerEvents: "none",
+        whiteSpace: "nowrap",
+        zIndex: 10,
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        transition: "all 0.3s ease",
+        opacity: "0.9"
+      }}>
+        {/* A cleaner icon presentation */}
+        <span style={{ 
+          backgroundColor: "rgba(0, 132, 136, 0.1)", 
+          padding: "4px 8px", 
+          borderRadius: "6px",
+          fontSize: "1.1rem"
+        }}>
+          📍
+        </span>
+        <span>Click on state to get started!</span>
+      </div>
     </>
   );
 }
