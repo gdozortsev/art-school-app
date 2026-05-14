@@ -34,7 +34,8 @@ interface CityCoord {
 interface ProjectedCoords {
   x: number;
   y: number;
-  scale: number
+  scale: number;
+  pinScreenSize: number;
 }
 
 export default function StateMap({ stateId, filteredPrograms, hoveredPrograms, setHoveredPrograms }: StateMapProps) {
@@ -198,7 +199,8 @@ export default function StateMap({ stateId, filteredPrograms, hoveredPrograms, s
 
         d3.select(this).select(".pin-container").attr("transform", `scale(${getPinScale(t.k) * 1.2})`);
         setHoveredProgramsRef.current(d.Program);
-        setProjectedCoordsRef.current({ x: screenX, y: screenY, scale: t.k });
+        const pinVisualSize = (22 * 1.2) / t.k * (rect.height / 750); // 22=image height, 1.2=pinScale base
+        setProjectedCoordsRef.current({ x: screenX, y: screenY, scale: t.k, pinScreenSize: pinVisualSize});
       })
       .on("mouseleave", function() {
         const t = transformRef.current;
