@@ -2,7 +2,7 @@
 import { useRef, useEffect, useState} from "react";
 import * as d3 from "d3";
 import { feature } from "topojson-client";
-import { stateNames} from "../../lib/utils/types";
+import { SchoolWithPrograms, stateNames} from "../../lib/utils/types";
 import SchoolPopup from "../../components/map/SchoolPopup";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { Feature, FeatureCollection, GeoJsonProperties } from "geojson";
@@ -110,14 +110,15 @@ export default function StateMap({ stateId, filteredPrograms, hoveredPrograms, s
       // Apply zoom transform
       g.attr("transform", `translate(${translate})scale(${scale})`);
 
-      // Filter programs for this state
-      const statePrograms = filteredPrograms.filter((program: any) =>
-        String(program.stateId) === String(stateId)
-      );
-
       // Add Google-style pin markers for art programs in this state
+
+      const cityMappingsFiltered = cityMappings.filter((cityCoord: CityCoord) =>
+        cityCoord.Program.some(program =>
+          filteredPrograms.some((school: SchoolWithPrograms) => school.school_name === program.school_name)
+        )
+      );
       const markers = g.selectAll(".marker")
-        .data(cityMappings)
+        .data(cityMappingsFiltered)
         .enter()
         .append("g")
         .attr("class", "marker")

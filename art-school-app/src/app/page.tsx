@@ -26,12 +26,25 @@ export default function Home() {
     }, [])
 
     const filteredSchools: SchoolWithPrograms[] = (allSchools || []).filter(school => {
-        if (filters.programs.length > 0 && !filters.programs.some(p => school.Program.some((d: any) => d.discipline.includes(p)))) return false;
-        if (filters.searchText && !school.school_name.toLowerCase().includes(filters.searchText.toLowerCase())) return false;
-        return true;
+      if (filters.programs.length > 0) {
+          const matchesCheckboxes = filters.programs.some(p =>
+              school.Program.some((prg: any) => prg.discipline.includes(p))
+          );
+          if (!matchesCheckboxes) return false;
+      }
+
+      if (filters.searchText) {
+          const searchLower = filters.searchText.toLowerCase();
+          const matchesSearch = school.Program.some((prg: any) =>
+              prg.discipline.toLowerCase().includes(searchLower) ||
+              prg.degree?.toLowerCase().includes(searchLower)
+          );
+          if (!matchesSearch) return false;
+      }
+
+      return true;
     });
 
-    console.log("the filteredPrograms", filteredSchools.length)
     if (!allSchools) {
       return <div>Loading...</div>;
     }

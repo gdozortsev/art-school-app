@@ -19,6 +19,7 @@ export default function Sidebar({ filters, setFilters, filteredPrograms }: Sideb
     Object.fromEntries(programs.map(program => [program, false]))
   );
   const [disciplineMapping, setDisciplineMapping] = useState<Record<string, string[]>>({});
+  console.log(filteredPrograms)
 
   useEffect(() => {
     const fetchMapping = async () => {
