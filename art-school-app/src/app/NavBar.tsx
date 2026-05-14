@@ -54,6 +54,14 @@ export default function NavBar({}) {
           <Link href="/all" style={linkStyle("/all")}>
             All Schools
           </Link>
+
+          <Link href="/apply" style={linkStyle("/apply")}>
+            How Do I Apply?
+          </Link>
+
+          <Link href="/careers" style={linkStyle("/careers")}>
+            Careers in the Arts
+          </Link>
         </div>
 
         {/* Right Side: Secondary Links */}

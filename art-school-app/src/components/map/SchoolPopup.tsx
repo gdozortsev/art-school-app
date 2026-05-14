@@ -36,13 +36,13 @@ const SchoolPopup = ({ hoveredPrograms, projected_coords, onClose }: SchoolPopup
 
         const pinOffset = projected_coords.pinScreenSize * projected_coords.scale * 0.8;
         const idealTop = projected_coords.y - actualHeight - pinOffset - 20; // extra 20px higher
-        
+
         const wouldGoAboveNavbar = idealTop < navbarHeight + 8;
-        
+
         const top = wouldGoAboveNavbar
             ? projected_coords.y + pinOffset + 10 // flip below the pin
             : Math.min(window.innerHeight - actualHeight - 16, idealTop);
-        
+
         const left = Math.min(
             projected_coords.x - popupWidth / 2,
             window.innerWidth - popupWidth - 16
@@ -83,7 +83,7 @@ const SchoolPopup = ({ hoveredPrograms, projected_coords, onClose }: SchoolPopup
                     zIndex: 1,
                 }}>
                     <h4 style={{ margin: 0, color: "#333", fontSize: "0.95rem" }}>
-                        📍 {first.city}, {first.state.charAt(0) + first.state.slice(1).toLowerCase()}
+                        📍 {first.city}, {first.state == "MASSACUSSETTS" ? "Massachusetts" :  first.state.split(" ").map((w: string) => w.charAt(0) + w.slice(1).toLowerCase()).join(" ")}
                     </h4>
                     <button onClick={onClose} style={{
                         background: "none",

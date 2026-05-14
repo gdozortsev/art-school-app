@@ -122,7 +122,7 @@ export default function StateMap({ stateId, filteredPrograms, hoveredPrograms, s
         .attr("d", path)
         .attr("fill", "none")
         .attr("stroke", "rgba(255,255,255,0.4)")
-        .attr("stroke-width", 0.5)
+        .attr("stroke-width", 0.3)
         .style("opacity", 0.2);
 
       const bounds = path.bounds(state);

@@ -13,7 +13,7 @@ export const stateNames: Record<string, string> = {
   "08": "Colorado",
   "09": "Connecticut",
   "10": "Delaware",
-  "11": "District of Columbia",
+  "11": "Washington DC",
   "12": "Florida",
   "13": "Georgia",
   "15": "Hawaii",
@@ -55,8 +55,7 @@ export const stateNames: Record<string, string> = {
   "53": "Washington",
   "54": "West Virginia",
   "55": "Wisconsin",
-  "56": "Wyoming",
-  "57": "Washington DC"
+  "56": "Wyoming"
 };
 
 
