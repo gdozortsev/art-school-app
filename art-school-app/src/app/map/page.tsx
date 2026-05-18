@@ -53,7 +53,7 @@ export default function Home() {
     <div style={{ display: "flex", height: "calc(100vh - 60px)" }}>
       <Sidebar filters={filters} setFilters={setFilters} filteredPrograms={filteredSchools} />
       <div style={{ flex: 1, textAlign: "center", position: "relative" }}>
-        <USMap filteredSchools={filteredSchools}/>
+        <USMap filteredSchools={filteredSchools} filters={filters}/>
       </div>
     </div>
   );

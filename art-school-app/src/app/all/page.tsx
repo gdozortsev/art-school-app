@@ -34,8 +34,7 @@ export default function SchoolPage() {
 
     return (
         <div style={{ 
-            minHeight: "calc(100vh - 60px)", 
-            backgroundColor: "rgba(0, 132, 136, 0.15)", // Soft off-white background
+            minHeight: "100vh",
             padding: "2rem" 
         }}>
             <div style={{ 
@@ -112,8 +111,7 @@ export default function SchoolPage() {
                         >
                             <div style={{ 
                                 width: "40px", 
-                                height: "40px", 
-                                backgroundColor: "rgba(0, 132, 136, 0.1)", 
+                                height: "40px",
                                 borderRadius: "8px",
                                 display: "flex",
                                 alignItems: "center",

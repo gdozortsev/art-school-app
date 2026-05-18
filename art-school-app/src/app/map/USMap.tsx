@@ -12,11 +12,16 @@ const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
 type StateFeature = Feature<any, GeoJsonProperties>;
 
+interface Filters {
+  programs: string[]; //all of the selected disciplines (in Program, stored as Program.umbrella_discipline & Program.discipline)
+  searchText: string;
+}
 interface USMapProps {
   filteredSchools: SchoolWithPrograms[];
+  filters: Filters; 
 }
 
-export default function USMap({ filteredSchools}: USMapProps) {
+export default function USMap({ filteredSchools, filters }: USMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const router = useRouter();
 
@@ -84,7 +89,15 @@ export default function USMap({ filteredSchools}: USMapProps) {
             .duration(750)
             .attr("transform", `translate(${translate})scale(${scale})`)
             .on("end", () => {
-              setTimeout(() => router.push(`/state/${d.id}`), 200);
+              const params = new URLSearchParams();
+              if (filters.programs.length > 0) {
+                params.set("programs", filters.programs.join(","));
+              }
+              if (filters.searchText) {
+                params.set("search", filters.searchText);
+              }
+              const query = params.toString();
+              setTimeout(() => router.push(`/state/${d.id}${query ? `?${query}` : ""}`), 200);
             });
         })
         .on("mouseenter", function() {
@@ -93,6 +106,7 @@ export default function USMap({ filteredSchools}: USMapProps) {
         .on("mouseleave", function() {
           d3.select(this).attr("fill", "#AABCF0");
         });
+        
 
         const markers = g.selectAll(".marker")
           .data(filteredSchools)

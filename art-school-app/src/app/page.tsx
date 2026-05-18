@@ -10,11 +10,11 @@ export default function Landing() {
       {/* Map button - centered */}
       <Link href="/map" style={{
         position: "absolute",
-        top: "44%",
+        top: "52%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        width: "18%",
-        height: "14%",
+        width: "25%",
+        height: "22%",
         borderRadius: "999px",
         display: "block",
       }} />
@@ -22,11 +22,11 @@ export default function Landing() {
       {/* List of schools */}
       <Link href="/all" style={{
         position: "absolute",
-        top: "72%",
+        top: "80%",
         left: "27%",
         transform: "translate(-50%, -50%)",
-        width: "16%",
-        height: "14%",
+        width: "18%",
+        height: "16%",
         borderRadius: "999px",
         display: "block",
       }} />
@@ -34,11 +34,11 @@ export default function Landing() {
       {/* Steps and tips */}
       <Link href="/apply" style={{
         position: "absolute",
-        top: "72%",
+        top: "80%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        width: "16%",
-        height: "14%",
+        width: "18%",
+        height: "16%",
         borderRadius: "999px",
         display: "block",
       }} />
@@ -46,11 +46,11 @@ export default function Landing() {
       {/* Careers in the arts */}
       <Link href="/careers" style={{
         position: "absolute",
-        top: "72%",
+        top: "80%",
         left: "73%",
         transform: "translate(-50%, -50%)",
-        width: "16%",
-        height: "14%",
+        width: "18%",
+        height: "16%",
         borderRadius: "999px",
         display: "block",
       }} />

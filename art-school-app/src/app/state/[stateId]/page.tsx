@@ -11,9 +11,20 @@ interface Filters {
   searchText: string;
 }
 
-export default function StatePage({ params }: { params: Promise<{ stateId: string }> }) {
+export default function StatePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ stateId: string }>;
+  searchParams: Promise<{ programs?: string; search?: string }>;
+}) {
   const { stateId } = use(params);
-  const [filters, setFilters] = useState<Filters>({ programs: [], searchText: "" });
+  const { programs, search } = use(searchParams); // unwrap searchParams too
+
+  const [filters, setFilters] = useState<Filters>({
+    programs: programs ? programs.split(",") : [],
+    searchText: search ?? "",
+  });
   const [hoveredPrograms, setHoveredPrograms] = useState<Program[]| null>(null);
   const [allSchools, setAllSchools] = useState<SchoolWithPrograms[] | null> (null);
 

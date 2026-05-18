@@ -24,8 +24,11 @@ export default function Contacts() {
         }}>
           Contact Us
         </h1>
+        <p style={{ color: "#666", fontSize: "1.1rem", marginBottom: "0.5rem" }}>
+          Have questions about the map or specific programs?
+        </p>
         <p style={{ color: "#666", fontSize: "1.1rem", marginBottom: "3rem" }}>
-          Have questions about the map or specific programs? We're here to help.
+          See a mistake? We're here to help.
         </p>
 
         {/* Contact Card */}
