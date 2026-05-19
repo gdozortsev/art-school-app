@@ -2,14 +2,13 @@
 import { useRef, useEffect, useState} from "react";
 import * as d3 from "d3";
 import { feature } from "topojson-client";
-import { SchoolWithPrograms, stateNames} from "../../lib/utils/types";
+import { SchoolWithPrograms, stateNames, TOP_CITIES} from "../../lib/utils/types";
 import SchoolPopup from "../../components/map/SchoolPopup";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { Feature, FeatureCollection, GeoJsonProperties } from "geojson";
 import { getStaticCities } from "@/src/lib/utils/cities";
 import { Program } from "@prisma/client";
 import pin from "../../assets/pin.svg"
-//"/Users/gdozorts/Downloads/art-school-app/art-school-app/src/app/map/StateMap.tsx"
 
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
@@ -177,7 +176,10 @@ export default function StateMap({ stateId, filteredPrograms, hoveredPrograms, s
     g.selectAll(".marker").remove();
 
     const markers = g.selectAll(".marker")
-      .data(cityMappingsFiltered)
+      .data(cityMappingsFiltered.map((d: CityCoord) => ({
+        ...d,
+        isMajor: TOP_CITIES.has(d.city)
+      })))
       .enter()
       .append("g")
       .attr("class", "marker")
@@ -208,11 +210,22 @@ export default function StateMap({ stateId, filteredPrograms, hoveredPrograms, s
         setHoveredProgramsRef.current(null);
       });
 
+
     markers.each(function(d: any) {
       const marker = d3.select(this);
+
       const pinGroup = marker.append("g")
         .attr("class", "pin-container")
         .attr("transform", `scale(${getPinScale(transformRef.current.k)})`);
+
+      const isMajor = d.isMajor;
+
+      const fontSize = isMajor ? 13 : 9;
+      const charWidth = fontSize * 0.62;
+      const labelWidth = d.city.length * charWidth + 14;
+      const labelHeight = fontSize + 10;
+
+      // Raise major cities to the front
 
       pinGroup.append("circle")
         .attr("r", 12)
@@ -228,25 +241,36 @@ export default function StateMap({ stateId, filteredPrograms, hoveredPrograms, s
         .style("filter", "drop-shadow(0px 2px 2px rgba(0,0,0,0.2))");
 
       pinGroup.insert("rect", "text")
-        .attr("x", -(d.city.length * 3) - 6)
+        .attr("x", -(labelWidth / 2))
         .attr("y", 6)
-        .attr("width", (d.city.length * 6) + 12)
-        .attr("height", 14)
+        .attr("width", labelWidth)
+        .attr("height", labelHeight)
         .attr("rx", 7)
         .attr("fill", "rgba(255, 255, 255, 0.9)")
-        .style("filter", "drop-shadow(0px 1px 2px rgba(0,0,0,0.1))");
+        .attr("stroke", isMajor ? "rgba(255, 0, 0, 0.2)" : "none")
+        .attr("stroke-width", isMajor ? 5 : 0)
+        .style("filter", isMajor
+          ? "drop-shadow(0px 2px 4px rgba(0,0,0,0.25))"
+          : "drop-shadow(0px 1px 2px rgba(0,0,0,0.1))"
+        );
 
       pinGroup.append("text")
         .attr("x", 0)
-        .attr("y", 16)
+        .attr("y", 6 + labelHeight / 2 + fontSize * 0.35)
         .attr("text-anchor", "middle")
-        .style("font-size", "9px")
-        .style("font-weight", "600")
+        .style("font-size", `${fontSize}px`)
+        .style("font-weight", isMajor ? "700" : "600")
         .style("fill", "#000000")
+        .style("letter-spacing", isMajor ? "0.04em" : "0")
         .style("text-transform", "uppercase")
         .text(d.city);
-    });
+      });
+      g.selectAll(".marker")
+        .filter((d: any) => d.isMajor)
+        .raise();
   }, [cityMappings, filteredPrograms]);
+
+  
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>

@@ -23,7 +23,7 @@ const SchoolPopup = ({ hoveredPrograms, projected_coords, onClose }: SchoolPopup
 
     const organized = hoveredPrograms.reduce((acc, program) => {
         if (!acc[program.school_name]) acc[program.school_name] = [];
-        acc[program.school_name].push(program.discipline);
+        acc[program.school_name].push(program.degree!);
         return acc;
     }, {} as Record<string, string[]>);
 
@@ -98,7 +98,7 @@ const SchoolPopup = ({ hoveredPrograms, projected_coords, onClose }: SchoolPopup
 
                 {/* Scrollable list */}
                 <div style={{ maxHeight: "160px", overflowY: "auto", padding: "0.5rem" }}>
-                    {Object.entries(organized).map(([school_name, disciplines], i) => (
+                    {Object.entries(organized).map(([school_name, degrees], i) => (
                         <Link
                             href={`/school/${school_name}`}
                             key={i}
@@ -117,7 +117,7 @@ const SchoolPopup = ({ hoveredPrograms, projected_coords, onClose }: SchoolPopup
                                 {school_name}
                             </p>
                             <p style={{ margin: 0, fontSize: "0.8rem", color: "#888" }}>
-                                {disciplines.join(", ")}
+                                {degrees.join(", ")}
                             </p>
                         </Link>
                     ))}
